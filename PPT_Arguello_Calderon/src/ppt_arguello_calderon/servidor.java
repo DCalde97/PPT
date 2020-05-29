@@ -10,5 +10,5 @@ package ppt_arguello_calderon;
  * @author ASUS
  */
 public class servidor {
-    
+    //El servidor
 }
