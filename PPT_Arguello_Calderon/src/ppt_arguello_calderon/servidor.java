@@ -33,7 +33,7 @@ public class servidor {
             listaNicks(J1);
             String nick=J1.leerNick(J1.sckJugador);
             Jugador J2=buscarJugador(nick);
-            //mandar reto a jugador
+            J2.sendMessage("Reto");
             //establecer partida entre jugadores
         }while (true);
 
@@ -67,9 +67,5 @@ public class servidor {
         }
         return J2;
     }
-    
-    
-    
-    
-    
+       
 }
