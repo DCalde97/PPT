@@ -1,6 +1,8 @@
 
 package ppt_arguello_calderon;
 
+import static com.sun.org.apache.xerces.internal.util.FeatureState.is;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -19,6 +21,8 @@ public class Jugador
   Socket sckJugador;
   InputStream in;
   OutputStream ou;
+  private int partidasGanadas;
+  private int rondasGanadas;
 
   public static Jugador newJugador(Socket sck)
   {
@@ -33,6 +37,8 @@ public class Jugador
           this.sckJugador = sck;
           this.in = this.sckJugador.getInputStream();
           this.ou = this.sckJugador.getOutputStream(); 
+          this.partidasGanadas=0;
+          this.rondasGanadas=0;
           this.start();
         } catch(Exception ex){
             System.out.println("No se han podido asignar los valores del Jugador");
@@ -58,6 +64,19 @@ public class Jugador
     }
     public void setNick(String nick){
         this.nick=nick;
+    }
+    
+    public int getPartidasGanadas(){
+        return this.partidasGanadas;
+    }
+    public void setPartidasGanadas(int partidasGanadas){
+        this.partidasGanadas=partidasGanadas;
+    }
+    public int getRondasGanadas(){
+        return this.rondasGanadas;
+    }
+    public void setRondasGanadas(int rondasGanadas){
+        this.rondasGanadas=rondasGanadas;
     } 
 
     public void sendMessage(String mensaje)
@@ -77,4 +96,32 @@ public class Jugador
             return false;
         }
     }
+    
+    Thread hiloLectura = new Thread(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        while (true){
+          
+          try{
+            byte buffer[] = new byte[1024];
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            int nb = 0;
+            do{
+              nb = in.read(buffer);
+              baos.write(buffer, 0, nb);
+            }while (nb>0 && in.available()>0);
+
+            System.out.println("\t\t\tLlegando..." + new String(baos.toByteArray()));
+          //Recibe el mensaje, hay que mostrar por pantalla cuando el J2 acepte el reto
+          //Cuando J2 acepte el reto se recibe su confirmación
+          }catch (Exception ex){
+             System.out.println("Error de comunicación");
+          }
+
+        }
+      }
+    });
+      
 }
