@@ -9,6 +9,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 /**
@@ -17,22 +18,58 @@ import java.util.ArrayList;
  */
 public class servidor {
     //El servidor
-    private static ArrayList<Jugador> JugadoresConectados = new ArrayList<>();
+    private static ArrayList<Jugador> jugadoresConectados = new ArrayList<>();
     
     public static void main (String args[]) throws Exception
-  {
-    ServerSocket server = new ServerSocket(9669);
-    System.out.println("Servidor Arrancado");
+    {
+        ServerSocket server = new ServerSocket(9669);
+        System.out.println("Servidor Arrancado");
+
+        do{
+            Socket sck =  server.accept();  
+            System.out.println("Alguien conectado...");  //quitar eso
+            Jugador J1 = Jugador.newJugador(sck);
+            jugadoresConectados.add(J1);
+            listaNicks(J1);
+            String nick=J1.leerNick(J1.sckJugador);
+            Jugador J2=buscarJugador(nick);
+            //mandar reto a jugador
+            //establecer partida entre jugadores
+        }while (true);
+
+    }
+
+    private static void listaNicks(Jugador J1) {
+        String listaNicks="";
+        for(Jugador unJugador : jugadoresConectados){
+            listaNicks = listaNicks.concat(unJugador.getNick()+";");
+        }
+        J1.sendMessage(listaNicks);
+    }
+
+    private static Jugador buscarJugador(String nick) {
+        
+        Jugador J2=null;
+        try{
+            for(Jugador unJugador : jugadoresConectados){
+                if (unJugador.equals(nick)){
+                    J2=unJugador;
+                    break;
+                } else {
+                    J2=null;
+                }
+            }
+            if (J2==null){
+                throw new NotFoundException ("Jugador no encontrado");
+            }
+        } catch(NotFoundException ex){
+            J2=null;
+        }
+        return J2;
+    }
     
-    do{
-      
-      
-      Socket sck =  server.accept();  
-      System.out.println("Alguien conectado...");  //quitar eso
-      Jugador cliente = new Jugador(sck);
-      JugadoresConectados.add(cliente);
-      
-    }while (true);
     
-  }
+    
+    
+    
 }
