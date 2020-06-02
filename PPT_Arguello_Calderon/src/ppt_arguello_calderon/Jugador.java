@@ -2,11 +2,19 @@
 package ppt_arguello_calderon;
 
 import static com.sun.org.apache.xerces.internal.util.FeatureState.is;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,9 +22,11 @@ import java.util.logging.Logger;
  *
  * @author ASUS
  */
+
 public class Jugador 
     extends Thread
 {
+  private File fichero;
   private String nick;
   Socket sckJugador;
   InputStream in;
@@ -138,9 +148,106 @@ public class Jugador
       }
     }
 
-    private void actualizarFichero() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private boolean actualizarFichero(Jugador J) {
+        //Función que actualiza los datos de la cuenta en el fichero de cuentas
+        boolean hecho;
+	try {
+            boolean ejecutado=false;
+            FileReader entrada = new FileReader("S:\\Ranking.txt");
+            /*Vamos a crear un archivo temporal para usarlo de
+	    apoyo en la modificacion de Cuentas.txt*/
+	    FileWriter entradaTemporal = new FileWriter("S:\\RankingTemporal.txt");
+		                                
+		        BufferedReader buffer = new BufferedReader(entrada);				
+				String linea="";
+					 
+				while(linea!=null){
+					linea=buffer.readLine();
+		            if(linea!=null){
+		            	String[] partes = linea.split(";", 3);
+		            	String nick = partes[0]; 
+		            	String rondas = partes[1]; 
+		            	String partidas = partes[2];
+		            	if(J.getNick().equals(nick)){
+		            		linea = (J.getNick()+";"+J.getPartidasGanadas()+";"+J.getRondasGanadas());
+		            		entradaTemporal.write(linea+"\n");
+		            		ejecutado = true;
+		            	} else {
+		            		entradaTemporal.write(linea+"\n");
+		            	}
+		            }
+				}
+		                
+				entrada.close();
+				buffer.close();
+				entradaTemporal.close();
+				
+				if(ejecutado==true){
+					File f1 = new File("S:\\Ranking.txt");
+					File f2 = new File("S:\\RankingTemporal.txt");
+					File f3 = new File("S:\\Temporal.txt");
+					f1.renameTo(new File("S:\\Temporal.txt"));
+					f2.renameTo(new File("S:\\Ranking.txt"));
+					f3.renameTo(new File("S:\\RankingTemporal.txt"));
+					hecho = true;
+				} else {
+					hecho = false;
+				}
+                                
+				
+				
+			} catch (IOException e) {
+				System.out.println("No se puede abrir el archivo,"
+						+ " ruta incorrecta o archivo inexistente");
+                                hecho = false;
+			}
+                        return hecho;
         
+        
+        /*
+        File tmp; 
+        tmp = new File("tmp.txt");//Fichero temporal
+        BufferedReader file = null;
+        try {
+            file = new BufferedReader(new FileReader(fichero));
+            PrintWriter writer = new PrintWriter(tmp, "UTF-8");
+            String line;
+            while ((line = file.readLine()) != null) {
+                if(line.startsWith(J.getNick()+";")) {//Si es la cuenta que busco
+                    line = J.toString();//reemplazo la linea
+                }
+                writer.println(line);
+            }   file.close();
+            if (writer.checkError()) {
+            	writer.close();
+                throw new IOException("No se puede escribir el fichero");
+            }
+            writer.close();
+            //Sustituyo el fichero original por el nuevo
+            Files.move(tmp.toPath(), fichero.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(J.getNick()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(J.getNick()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                file.close();
+            } catch (IOException ex) {
+                Logger.getLogger(J.getNick()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return true;
+
+        */
+        
+        
+    }
+    
+    
+  
+    public String toString(Jugador J){
+        String cadena=(J.getNick()+";"+J.getPartidasGanadas()+";"+J.getRondasGanadas());
+        return cadena;
     }
       
 }
