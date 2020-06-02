@@ -49,7 +49,6 @@ public class Jugador
     {
         try {
             byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres bacios
-            in=sck.getInputStream();
             in.read(buffer);
             String nick = new String(buffer,"UTF-8"); //en buffer esta el nick
         } catch (IOException ex) {  
@@ -71,12 +70,14 @@ public class Jugador
     }
     public void setPartidasGanadas(int partidasGanadas){
         this.partidasGanadas=partidasGanadas;
+        actualizarFichero();
     }
     public int getRondasGanadas(){
         return this.rondasGanadas;
     }
     public void setRondasGanadas(int rondasGanadas){
         this.rondasGanadas=rondasGanadas;
+        actualizarFichero();
     } 
 
     public void sendMessage(String mensaje)
@@ -116,6 +117,7 @@ public class Jugador
             System.out.println("\t\t\tLlegando..." + new String(baos.toByteArray()));
           //Recibe el mensaje, hay que mostrar por pantalla cuando el J2 acepte el reto
           //Cuando J2 acepte el reto se recibe su confirmación
+          //mandar confirmacion al servidor
           }catch (Exception ex){
              System.out.println("Error de comunicación");
           }
@@ -123,5 +125,22 @@ public class Jugador
         }
       }
     });
+    
+    public String reciveMensage(){
+        try {
+            byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres bacios
+            in.read(buffer);
+            String mensage = new String(buffer,"UTF-8"); //en buffer esta el nick
+            return mensage;
+        } catch (IOException ex) {
+          Logger.getLogger(Jugador.class.getName()).log(Level.SEVERE, null, ex);
+          return null;
+      }
+    }
+
+    private void actualizarFichero() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+    }
       
 }
