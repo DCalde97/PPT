@@ -62,31 +62,91 @@ extends Thread
         this.puntuacionJ2 = puntuacionJ2;
     }
 
-public void run()
-  {
-    int numEjecuciones = 0;
-    while (true)
-    {  
-      try
+    public void run()
       {
-        //Hay que hacer la lógica de la partida
-        //Enviar petición de nueva ronda (con su opcion)a los Jugadores, enviando puntiaciones
-        // y el numero de rondas
-          //Recibir la eleccion de los jugadores
-          //Interpretar esas elecciones con la logica del juego
-          //Volver a empezar una nueva peticion, hasta que se acaben las rondas
-          
-          //Registro de puntuaciones en in fichero resultados
-          //Fin 
-          
-         
-      } catch (InterruptedException ex)
-      {
-      
-      }
+        int numEjecuciones = 0;
+        while (true)
+        {   
+            while(this.rondas>0 && this.puntuacionJ1<3 && this.puntuacionJ2<3) {
+                ronda(this.J1,this.J2);
+                this.rondas--;
+            }
+                //paso de mensajes de los jugadores con el server
+                //cuando puntuacion jugador =3 fin o nº rondas =5 fin
+                //comprar las elecciones y decidir ganador aumentando puntuacion
+
+
+
+              //Hay que hacer la lógica de la partida 
+              //Enviar petición de nueva ronda (con su opcion)a los Jugadores, enviando puntiaciones
+              // y el numero de rondas
+              //Recibir la eleccion de los jugadores
+              //Interpretar esas elecciones con la logica del juego
+              //Volver a empezar una nueva peticion, hasta que se acaben las rondas
+
+              //Registro de puntuaciones en in fichero resultados
+              //Fin
+
+
+
+             //V 2.0 covid
+
+
+        }
     }
-    //Cambiar Estado de ese atributo.
-  }
+        //Cambiar Estado de ese atributo.
+    
+    //refactorizar mu largo
+    private void ronda(Jugador J1, Jugador J2) {
+        int ganador;
+        Jugador Ganador=null;
+        String opcionJ1;
+        String opcionJ2;
+        //mandar mensajes a J1
+        J1.sendMessage("IncioRonda");
+        J2.sendMessage("IncioRonda");
+        opcionJ1 = J1.reciveMensage();
+        opcionJ2 = J2.reciveMensage();
+        if (opcionJ1.equals(null) || opcionJ2.equals(null)){
+            if (opcionJ1.equals(null)) {
+                ganador =2;
+            } else if (opcionJ2.equals(null)) {
+                ganador =1;
+            } else {
+                ganador =0;
+            }
+        } else {
+            Juego op1 = transformar(opcionJ1);
+            Juego op2 = transformar(opcionJ2);
+            ganador=Juego.ganador(op1,op2);
+        }
+        if (ganador==1){
+            J1.setRondasGanadas(J1.getRondasGanadas()+1);
+            this.puntuacionJ1++;
+        } else if(ganador==2){
+            J2.setRondasGanadas(J2.getRondasGanadas()+1);
+            this.puntuacionJ1++;
+        }else{
+            Ganador = null;
+        }
+    }
+
+    //crear exception personalizada
+    private Juego transformar(String opcion){
+        Juego op=null;
+        if (opcion.equals("Piedra")){
+            op=Juego.Piedra;
+        } else if(opcion.equals("Papel")){
+            op=Juego.Papel;
+        } else if(opcion.equals("Tijera")){
+            op=Juego.Tijera;
+        } else {
+            op=null;
+        }
+        return op;
+    }
+
+    
     
     
     
