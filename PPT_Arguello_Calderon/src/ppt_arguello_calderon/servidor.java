@@ -34,6 +34,11 @@ public class servidor {
             String nick=J1.leerNick(J1.sckJugador);
             Jugador J2=buscarJugador(nick);
             J2.sendMessage("Reto");
+            byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres bacios
+            J2.in.read(buffer);
+            Partida P1=new Partida(J1,J2);
+            
+            //recibir
             //establecer partida entre jugadores
         }while (true);
 
