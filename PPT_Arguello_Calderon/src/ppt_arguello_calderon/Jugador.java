@@ -157,94 +157,53 @@ public class Jugador
             /*Vamos a crear un archivo temporal para usarlo de
 	    apoyo en la modificacion de Cuentas.txt*/
 	    FileWriter entradaTemporal = new FileWriter("C:\\RankingTemporal.txt");
-		                                
-		        BufferedReader buffer = new BufferedReader(entrada);				
-				String linea="";
+            BufferedReader buffer = new BufferedReader(entrada);				
+            String linea="";
 					 
-				while(linea!=null){
-					linea=buffer.readLine();
-		            if(linea!=null){
-		            	String[] partes = linea.split(";", 3);
-		            	String nick = partes[0]; 
-		            	String rondas = partes[1]; 
-		            	String partidas = partes[2];
-		            	if(this.nick.equals(nick)){
-		            		linea = (this.nick+";"+this.partidasGanadas+";"+this.rondasGanadas);
-		            		entradaTemporal.write(linea+"\n");
-		            		ejecutado = true;
-		            	} else {
-		            		entradaTemporal.write(linea+"\n");
-		            	}
-		            }
-				}
+            while(linea!=null){
+                linea=buffer.readLine();
+                if(linea!=null){
+                    String[] partes = linea.split(";", 3);
+		    String nick = partes[0]; 
+		    String rondas = partes[1]; 
+		    String partidas = partes[2];
+		    if(this.nick.equals(nick)){
+                        linea = (this.nick+";"+this.partidasGanadas+";"+this.rondasGanadas);
+		        entradaTemporal.write(linea+"\n");
+		        ejecutado = true;
+		    } else {
+		        entradaTemporal.write(linea+"\n");
+		    }
+		}
+            }
 		                
-				entrada.close();
-				buffer.close();
-				entradaTemporal.close();
+            entrada.close();
+            buffer.close();
+            entradaTemporal.close();
 				
-				if(ejecutado==true){
-					File f1 = new File("C:\\Ranking.txt");
-					File f2 = new File("C:\\RankingTemporal.txt");
-					File f3 = new File("C:\\Temporal.txt");
-					f1.renameTo(new File("C:\\Temporal.txt"));
-					f2.renameTo(new File("C:\\Ranking.txt"));
-					f3.renameTo(new File("C:\\RankingTemporal.txt"));
-					hecho = true;
-				} else {
-					hecho = false;
-				}
+            if(ejecutado==true){
+		File f1 = new File("C:\\Ranking.txt");
+		File f2 = new File("C:\\RankingTemporal.txt");
+		File f3 = new File("C:\\Temporal.txt");
+		f1.renameTo(new File("C:\\Temporal.txt"));
+		f2.renameTo(new File("C:\\Ranking.txt"));
+		f3.renameTo(new File("C:\\RankingTemporal.txt"));
+		hecho = true;
+            } else {
+		hecho = false;
+            }
                                 
 				
 				
-			} catch (IOException e) {
-				System.out.println("No se puede abrir el archivo,"
-						+ " ruta incorrecta o archivo inexistente");
-                                hecho = false;
-			}
-                        return hecho;
-        
-        
-        /*
-        File tmp; 
-        tmp = new File("tmp.txt");//Fichero temporal
-        BufferedReader file = null;
-        try {
-            file = new BufferedReader(new FileReader(fichero));
-            PrintWriter writer = new PrintWriter(tmp, "UTF-8");
-            String line;
-            while ((line = file.readLine()) != null) {
-                if(line.startsWith(J.getNick()+";")) {//Si es la cuenta que busco
-                    line = J.toString();//reemplazo la linea
-                }
-                writer.println(line);
-            }   file.close();
-            if (writer.checkError()) {
-            	writer.close();
-                throw new IOException("No se puede escribir el fichero");
-            }
-            writer.close();
-            //Sustituyo el fichero original por el nuevo
-            Files.move(tmp.toPath(), fichero.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(J.getNick()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(J.getNick()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                file.close();
-            } catch (IOException ex) {
-                Logger.getLogger(J.getNick()).log(Level.SEVERE, null, ex);
-            }
+        } catch (IOException e) {
+            System.out.println("No se puede abrir el archivo,"
+            + " ruta incorrecta o archivo inexistente");
+            hecho = false;
         }
-        return true;
-
-        */
-        
-        
+        return hecho;
     }
     
-    
-  
+
     public String toString(Jugador J){
         String cadena=(J.getNick()+";"+J.getPartidasGanadas()+";"+J.getRondasGanadas());
         return cadena;
