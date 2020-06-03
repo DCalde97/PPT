@@ -49,6 +49,10 @@ extends Thread
         return rondas;
     }
 
+    public void setRondas(int rondas) {
+        this.rondas = rondas;
+    }
+    
     public int getTiempoRonda() {
         return tiempoRonda;
     }
@@ -97,7 +101,7 @@ extends Thread
         //Cambiar Estado de ese atributo.
     
     //refactorizar mu largo
-    private void ronda(Jugador J1, Jugador J2) {
+    public void ronda(Jugador J1, Jugador J2) {
         int ganador;
         Jugador Ganador=null;
         String opcionJ1;
