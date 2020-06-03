@@ -36,7 +36,26 @@ public class servidor {
             J2.sendMessage("Reto");
             byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres bacios
             J2.in.read(buffer);
-            Partida P1=new Partida(J1,J2);
+            
+            int rand;
+            rand = (int) (Math.random()*6+1);
+            
+            if (rand!=6) {
+                
+                Partida P1=new Partida(J1,J2);
+
+            }else{
+                rand = (int) (Math.random()*2+1);
+                
+                if (rand==1) {
+                    Covid C1=new Covid(J1,J2);
+                }else{
+                    Covid C1=new Covid(J2,J1);
+
+                }
+                
+
+            }
             
             //recibir
             //establecer partida entre jugadores
