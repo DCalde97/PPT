@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package ppt_arguello_calderon;
-
 /**
  *
  * @author ASUS
@@ -12,14 +11,11 @@ package ppt_arguello_calderon;
 public class Covid 
 extends Partida{
     
-    public Covid (Jugador J1, Jugador J2){
-        
+    public Covid (Jugador J1, Jugador J2){    
         super(J1,J2);
-        this.start();
-        
+        this.start();     
     }
-
-
+    
     public void run()
       {
         int numEjecuciones = 0;
@@ -34,31 +30,9 @@ extends Partida{
                 }
                 setRondas(getRondas()-1);
             }
-                //paso de mensajes de los jugadores con el server
-                //cuando puntuacion jugador =3 fin o nº rondas =5 fin
-                //comprar las elecciones y decidir ganador aumentando puntuacion
-
-
-
-              //Hay que hacer la lógica de la partida 
-              //Enviar petición de nueva ronda (con su opcion)a los Jugadores, enviando puntiaciones
-              // y el numero de rondas
-              //Recibir la eleccion de los jugadores
-              //Interpretar esas elecciones con la logica del juego
-              //Volver a empezar una nueva peticion, hasta que se acaben las rondas
-
-              //Registro de puntuaciones en in fichero resultados
-              //Fin
-
-
-
-             //V 2.0 covid
-
-
         }
     }
-        //Cambiar Estado de ese atributo.
-    
+        
     //refactorizar mu largo
     private void rondaCovid(Jugador J1, Jugador J2) {
         int ganador;
