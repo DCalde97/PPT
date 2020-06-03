@@ -46,15 +46,11 @@ public class servidor {
 
             }else{
                 rand = (int) (Math.random()*2+1);
-                
                 if (rand==1) {
                     Covid C1=new Covid(J1,J2);
                 }else{
                     Covid C1=new Covid(J2,J1);
-
-                }
-                
-
+                }    
             }
             
             //recibir
