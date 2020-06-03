@@ -17,7 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+ 
 /**
  *
  * @author ASUS
@@ -148,15 +148,15 @@ public class Jugador
       }
     }
 
-    private boolean actualizarFichero(Jugador J) {
+    public boolean actualizarFichero() {
         //Función que actualiza los datos de la cuenta en el fichero de cuentas
         boolean hecho;
 	try {
             boolean ejecutado=false;
-            FileReader entrada = new FileReader("S:\\Ranking.txt");
+            FileReader entrada = new FileReader("C:\\Ranking.txt");
             /*Vamos a crear un archivo temporal para usarlo de
 	    apoyo en la modificacion de Cuentas.txt*/
-	    FileWriter entradaTemporal = new FileWriter("S:\\RankingTemporal.txt");
+	    FileWriter entradaTemporal = new FileWriter("C:\\RankingTemporal.txt");
 		                                
 		        BufferedReader buffer = new BufferedReader(entrada);				
 				String linea="";
@@ -168,8 +168,8 @@ public class Jugador
 		            	String nick = partes[0]; 
 		            	String rondas = partes[1]; 
 		            	String partidas = partes[2];
-		            	if(J.getNick().equals(nick)){
-		            		linea = (J.getNick()+";"+J.getPartidasGanadas()+";"+J.getRondasGanadas());
+		            	if(this.nick.equals(nick)){
+		            		linea = (this.nick+";"+this.partidasGanadas+";"+this.rondasGanadas);
 		            		entradaTemporal.write(linea+"\n");
 		            		ejecutado = true;
 		            	} else {
@@ -183,12 +183,12 @@ public class Jugador
 				entradaTemporal.close();
 				
 				if(ejecutado==true){
-					File f1 = new File("S:\\Ranking.txt");
-					File f2 = new File("S:\\RankingTemporal.txt");
-					File f3 = new File("S:\\Temporal.txt");
-					f1.renameTo(new File("S:\\Temporal.txt"));
-					f2.renameTo(new File("S:\\Ranking.txt"));
-					f3.renameTo(new File("S:\\RankingTemporal.txt"));
+					File f1 = new File("C:\\Ranking.txt");
+					File f2 = new File("C:\\RankingTemporal.txt");
+					File f3 = new File("C:\\Temporal.txt");
+					f1.renameTo(new File("C:\\Temporal.txt"));
+					f2.renameTo(new File("C:\\Ranking.txt"));
+					f3.renameTo(new File("C:\\RankingTemporal.txt"));
 					hecho = true;
 				} else {
 					hecho = false;
