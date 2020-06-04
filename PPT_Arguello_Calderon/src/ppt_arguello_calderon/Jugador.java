@@ -148,6 +148,7 @@ public class Jugador
       }
     }
 
+    //REFACTOR
     public boolean actualizarFichero() {
         //Función que actualiza los datos de la cuenta en el fichero de cuentas
         boolean hecho;
