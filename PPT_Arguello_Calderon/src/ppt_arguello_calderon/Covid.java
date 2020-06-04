@@ -33,7 +33,7 @@ extends Partida{
         }
     }
         
-    //refactorizar mu largo
+    
     private void rondaCovid(Jugador J1, Jugador J2) {
         int ganador;
         Jugador Ganador=null;
@@ -44,21 +44,10 @@ extends Partida{
         J2.sendMessage("IncioRonda");
         opcionJ1 = J1.reciveMensage();
         opcionJ2 = J2.reciveMensage();
-        if (opcionJ1.equals(null) || opcionJ2.equals(null)){
-            if (opcionJ1.equals(null)) {
-                ganador =2;
-            } else if (opcionJ2.equals(null)) {
-                ganador =1;
-            } else {
-                ganador =0;
-            }
-        } else {
-            Juego op1 = transformar(opcionJ1);
-            Juego op2 = transformar(opcionJ2);
-            ganador=Juego.ganador(op1,op2);
-        }
+        
         J1.setRondasGanadas(J1.getRondasGanadas()+1);
         setPuntuacionJ1(getPuntuacionJ1()+1);
+        //se puede mandar mensajes de info cuando suban puntos y cambien rondas
     }
 
     //crear exception personalizada
