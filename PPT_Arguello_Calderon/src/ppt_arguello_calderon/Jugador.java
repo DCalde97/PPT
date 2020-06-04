@@ -191,10 +191,7 @@ public class Jugador
 		hecho = true;
             } else {
 		hecho = false;
-            }
-                                
-				
-				
+            }			
         } catch (IOException e) {
             System.out.println("No se puede abrir el archivo,"
             + " ruta incorrecta o archivo inexistente");
