@@ -72,11 +72,9 @@ extends Thread
             }
         }
     }
-  
-    //refactorizar mu largo
+    
     public void ronda(Jugador J1, Jugador J2) {
         int ganador;
-        Jugador Ganador=null;
         String opcionJ1;
         String opcionJ2;
         //mandar mensajes a J1
@@ -84,27 +82,45 @@ extends Thread
         J2.sendMessage("IncioRonda");
         opcionJ1 = J1.reciveMensage();
         opcionJ2 = J2.reciveMensage();
-        if (opcionJ1.equals(null) || opcionJ2.equals(null)){
-            if (opcionJ1.equals(null)) {
+        ganador=determinaGanador(opcionJ1, opcionJ2);
+        asignaPuntuacion(ganador);
+    }
+    
+    public int determinaGanador(String OP1, String OP2){
+        int ganador;
+        if (OP1.equals(null) || OP2.equals(null)){ 
+            
+            if (OP1.equals(null) && OP2.equals(null)){
+             ganador =0; //nadie gana
+            }else if (OP1.equals(null)) {
                 ganador =2;
-            } else if (opcionJ2.equals(null)) {
+            } else if (OP2.equals(null)) {
                 ganador =1;
             } else {
-                ganador =0;
+                ganador =0;   
             }
-        } else {
-            Juego op1 = transformar(opcionJ1);
-            Juego op2 = transformar(opcionJ2);
+        } else if (OP1.equals(OP2)){
+            ganador=3; //empate
+        }else {
+            Juego op1 = transformar(OP1);
+            Juego op2 = transformar(OP2);
             ganador=Juego.ganador(op1,op2);
         }
+        return ganador;
+    }
+    
+    public void asignaPuntuacion(int ganador){
         if (ganador==1){
             J1.setRondasGanadas(J1.getRondasGanadas()+1);
             this.puntuacionJ1++;
         } else if(ganador==2){
             J2.setRondasGanadas(J2.getRondasGanadas()+1);
+            this.puntuacionJ2++;
+        }else if(ganador==3){ //empate
+            J1.setRondasGanadas(J1.getRondasGanadas()+1);
             this.puntuacionJ1++;
-        }else{
-            Ganador = null;
+            J2.setRondasGanadas(J2.getRondasGanadas()+1);
+            this.puntuacionJ2++;
         }
     }
 
