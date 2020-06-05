@@ -1,4 +1,5 @@
 //instanciar una clase cliente desde el main de PPT_... por ejemplo
+//Ahora continuaremos con el desarrollo de Cliente desde la rama InterfacesCliente
 package ppt_arguello_calderon;
 
 import java.awt.event.ActionListener;
