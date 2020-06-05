@@ -101,66 +101,63 @@ public class Jugador
     }
 
     public boolean equals(String nick1){
+        boolean igual;
         if (this.nick.equals(nick1)){
-            return true;
+            igual=true;
         } else {
-            return false;
+            igual=false;
         }
+        return igual;
     }
     
     Thread hiloLectura = new Thread(new Runnable()
     {
-      @Override
-      public void run()
-      {
-        while (true){
-          
-          try{
-            byte buffer[] = new byte[1024];
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            int nb = 0;
-            do{
-              nb = in.read(buffer);
-              baos.write(buffer, 0, nb);
-            }while (nb>0 && in.available()>0);
+        @Override
+        public void run()
+        {
+            while (true){         
+                try{
+                    byte buffer[] = new byte[1024];
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    int nb = 0;
+                    do{
+                        nb = in.read(buffer);
+                        baos.write(buffer, 0, nb);
+                    }while (nb>0 && in.available()>0);
 
-            System.out.println("\t\t\tLlegando..." + new String(baos.toByteArray()));
-          //Recibe el mensaje, hay que mostrar por pantalla cuando el J2 acepte el reto
-          //Cuando J2 acepte el reto se recibe su confirmación
-          //mandar confirmacion al servidor
-          }catch (Exception ex){
-             System.out.println("Error de comunicación");
-          }
-
+                System.out.println("\t\t\tLlegando..." + new String(baos.toByteArray()));
+                //Recibe el mensaje, hay que mostrar por pantalla cuando el J2 acepte el reto
+                //Cuando J2 acepte el reto se recibe su confirmación
+                //mandar confirmacion al servidor
+                }catch (Exception ex){
+                    System.out.println("Error de comunicación");
+                }
+            }
         }
-      }
     });
     
     public String reciveMensage(){
+        String mensaje=null;
         try {
-            byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres bacios
+            byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres vacios
             in.read(buffer);
-            String mensage = new String(buffer,"UTF-8"); //en buffer esta el nick
-            return mensage;
+            mensaje = new String(buffer,"UTF-8"); //en buffer esta el nick
         } catch (IOException ex) {
           Logger.getLogger(Jugador.class.getName()).log(Level.SEVERE, null, ex);
-          return null;
-      }
+        }
+        return mensaje;
     }
-
-    //REFACTOR
+    
+    //Función que actualiza los datos del fichero de jugadores/puntuaciones
     public boolean actualizarFichero() {
-        //Función que actualiza los datos de la cuenta en el fichero de cuentas
         boolean hecho;
 	try {
             boolean ejecutado=false;
             FileReader entrada = new FileReader("C:\\Ranking.txt");
-            /*Vamos a crear un archivo temporal para usarlo de
-	    apoyo en la modificacion de Cuentas.txt*/
-	    FileWriter entradaTemporal = new FileWriter("C:\\RankingTemporal.txt");
+            FileWriter entradaTemporal = new FileWriter("C:\\RankingTemporal.txt");
             BufferedReader buffer = new BufferedReader(entrada);				
-            String linea="";
-					 
+            
+            String linea="";				 
             while(linea!=null){
                 linea=buffer.readLine();
                 if(linea!=null){
@@ -176,27 +173,31 @@ public class Jugador
 		        entradaTemporal.write(linea+"\n");
 		    }
 		}
-            }
-		                
+            }		                
             entrada.close();
             buffer.close();
             entradaTemporal.close();
-				
-            if(ejecutado==true){
-		File f1 = new File("C:\\Ranking.txt");
-		File f2 = new File("C:\\RankingTemporal.txt");
-		File f3 = new File("C:\\Temporal.txt");
-		f1.renameTo(new File("C:\\Temporal.txt"));
-		f2.renameTo(new File("C:\\Ranking.txt"));
-		f3.renameTo(new File("C:\\RankingTemporal.txt"));
-		hecho = true;
-            } else {
-		hecho = false;
-            }			
+            hecho = reemplazarFicheros(ejecutado);           
         } catch (IOException e) {
             System.out.println("No se puede abrir el archivo,"
             + " ruta incorrecta o archivo inexistente");
             hecho = false;
+        }
+        return hecho;
+    }
+        
+    private boolean reemplazarFicheros(boolean ejecutado){
+        boolean hecho;
+        if(ejecutado==true){
+            File f1 = new File("C:\\Ranking.txt");
+            File f2 = new File("C:\\RankingTemporal.txt");
+            File f3 = new File("C:\\Temporal.txt");
+            f1.renameTo(new File("C:\\Temporal.txt"));
+            f2.renameTo(new File("C:\\Ranking.txt"));
+            f3.renameTo(new File("C:\\RankingTemporal.txt"));
+            hecho = true;
+        } else {
+            hecho = false;   
         }
         return hecho;
     }
@@ -208,3 +209,4 @@ public class Jugador
     }
       
 }
+
