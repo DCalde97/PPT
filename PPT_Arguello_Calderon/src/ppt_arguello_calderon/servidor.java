@@ -34,30 +34,31 @@ public class servidor {
             String nick=J1.leerNick(J1.sckJugador);
             Jugador J2=buscarJugador(nick);
             J2.sendMessage("Reto");
-            byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres bacios
+            byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres vacios
             J2.in.read(buffer);
             
-            int rand;
-            rand = (int) (Math.random()*6+1);
-            
-            if (rand!=6) {
-                
-                Partida P1=new Partida(J1,J2);
+            creaPartida(J1,J2);
+        }while (true);
 
+    }
+    
+    private static void creaPartida(Jugador J1, Jugador J2){
+        int rand;
+            rand = (int) (Math.random()*6+1);           
+            if (rand!=6) {              
+                Partida P1=new Partida(J1,J2);
+                //return P1;
             }else{
                 rand = (int) (Math.random()*2+1);
                 if (rand==1) {
                     Covid C1=new Covid(J1,J2);
+                    //return C1;
                 }else{
                     Covid C1=new Covid(J2,J1);
+                    //return C1;
                 }    
-            }
-            
-            //recibir
-            //establecer partida entre jugadores
-        }while (true);
-
-    }
+            }       
+    } 
 
     private static void listaNicks(Jugador J1) {
         String listaNicks="";
