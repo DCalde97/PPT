@@ -62,7 +62,7 @@ extends Thread
     }
 
     public void run()
-      {
+    {
         int numEjecuciones = 0;
         while (true)
         {   
@@ -97,7 +97,7 @@ extends Thread
             } else if (OP2.equals(null)) {
                 ganador =1;
             } else {
-                ganador =0;   
+                ganador =0;
             }
         } else if (OP1.equals(OP2)){
             ganador=3; //empate
@@ -109,19 +109,26 @@ extends Thread
         return ganador;
     }
     
-    public void asignaPuntuacion(int ganador){
+    public boolean asignaPuntuacion(int ganador){
+        boolean result=false;
         if (ganador==1){
             J1.setRondasGanadas(J1.getRondasGanadas()+1);
             this.puntuacionJ1++;
+            result=true;
         } else if(ganador==2){
             J2.setRondasGanadas(J2.getRondasGanadas()+1);
             this.puntuacionJ2++;
+            result=true;
         }else if(ganador==3){ //empate
             J1.setRondasGanadas(J1.getRondasGanadas()+1);
             this.puntuacionJ1++;
             J2.setRondasGanadas(J2.getRondasGanadas()+1);
             this.puntuacionJ2++;
+            result=true;
+        }else if(ganador==0){
+            result=true;
         }
+        return result;
     }
 
     //crear exception personalizada
@@ -137,7 +144,7 @@ extends Thread
             op=null;
         }
         return op;
-    }       
+    }
 }
 
 
