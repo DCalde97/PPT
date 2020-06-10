@@ -1,7 +1,9 @@
 //instanciar una clase cliente desde el main de PPT_... por ejemplo
 package ppt_arguello_calderon;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -44,6 +46,36 @@ public class Cliente
     private void initCommunication() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+  @Override
+  public void actionPerformed(ActionEvent e)
+  {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public void run()
+  {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public void keyTyped(KeyEvent e)
+  {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public void keyPressed(KeyEvent e)
+  {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public void keyReleased(KeyEvent e)
+  {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
     
   
   
