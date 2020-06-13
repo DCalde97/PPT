@@ -1,4 +1,4 @@
-//instanciar una clase cliente desde el main de PPT_... por ejemplo
+//instanciar una clase cliente desde el main de PPT_... por ejemplo.
 package ppt_arguello_calderon;
 
 import java.awt.event.ActionEvent;
