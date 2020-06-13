@@ -1,6 +1,7 @@
 //instanciar una clase cliente desde el main de PPT_... por ejemplo.
 package ppt_arguello_calderon;
 
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -13,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 /**
  *
@@ -25,8 +27,9 @@ public class Cliente
     private JButton piedra;
     private JButton papel;
     private JButton tijera;
+    private JButton jugar;    
     private JPanel panel;
-    private JTextField txtmensaje;
+    private JTextField nombre;
     private JTextArea txtChatGlobal;
   
     private Socket cliente;
@@ -40,7 +43,25 @@ public class Cliente
   }
 
     private void initComponents() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.setTitle("Piedra papel tijera");
+        this.setSize(700, 500);
+        jugar = new JButton("Jugar");
+        nombre = new JTextField(20);
+        panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        
+        jugar.addActionListener(this);
+        nombre.addKeyListener(this);
+        
+        panel.add(jugar);
+        panel.add(nombre);
+        
+        this.getContentPane().add(panel);
+
+        this.pack();
+    
+        this.setVisible(true);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
     }
 
     private void initCommunication() {
