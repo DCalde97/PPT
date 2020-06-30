@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -37,10 +38,10 @@ public class Cliente
     private OutputStream flujoEscritura;
   
   
-  public Cliente(){
-     initComponents();
-     initCommunication();
-  }
+    public Cliente(){
+        initComponents();
+        initCommunication();
+    }
 
     private void initComponents() {
         this.setTitle("Piedra papel tijera");
@@ -65,38 +66,54 @@ public class Cliente
     }
 
     private void initCommunication() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try{
+            cliente = new Socket("localhost",9998);  
+            this.flujoLectura = cliente.getInputStream();
+            this.flujoEscritura = cliente.getOutputStream();
+            Thread hiloLectura = new Thread(this);
+            hiloLectura.start();
+        }
+        catch(Exception ex) {
+        }
     }
 
-  @Override
-  public void actionPerformed(ActionEvent e)
-  {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getSource() == jugar){
+           //JOptionPane.showMessageDialog(this, "Has pulsado hola Mundo!!", "Titulo", JOptionPane.INFORMATION_MESSAGE, null);
+        }
+    }
 
-  @Override
-  public void run()
-  {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+    @Override
+    public void run()
+    {
+      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      //cuando se inicia el cliente se inicia el metod run que se encargara de 
+      //la comunicacion para retar y recivir retos es decir siempre tiene que 
+      //estar disponible para recivir mensajes
+      //si el reto mandado o el recivido son aceptados se crea una interfadpartida
+      //si es cancerlado muestra un mensaje por pantalla y sigue a la espera de 
+      //nuevos mensajes y mandar nuevos retos
+    }
 
-  @Override
-  public void keyTyped(KeyEvent e)
-  {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+    @Override
+    public void keyTyped(KeyEvent e)
+    {
+      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-  @Override
-  public void keyPressed(KeyEvent e)
-  {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+    @Override
+    public void keyPressed(KeyEvent e)
+    {
+      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-  @Override
-  public void keyReleased(KeyEvent e)
-  {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+    @Override
+    public void keyReleased(KeyEvent e)
+    {
+      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
   
   
