@@ -22,7 +22,7 @@ public class servidor {
     
     public static void main (String args[]) throws Exception
     {
-        ServerSocket server = new ServerSocket(9669);
+        ServerSocket server = new ServerSocket(10001);
         System.out.println("Servidor Arrancado");
 
         do{
@@ -35,9 +35,13 @@ public class servidor {
             Jugador J2=buscarJugador(nick);
             J2.sendMessage("Reto");
             byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres vacios
-            J2.in.read(buffer);
-            
-            creaPartida(J1,J2);
+            //recibimos la respuesta de si acepta o no el reto pero la respuesta es un int porque?
+            //despues comprobamos si acepta se crea la partida sino
+            //implementar algo cuando se cancela la partida
+                //String resp=buffer.toString().getBytes("UTF-8");
+            //if(){
+                creaPartida(J1,J2);
+            //}
         }while (true);
 
     }
