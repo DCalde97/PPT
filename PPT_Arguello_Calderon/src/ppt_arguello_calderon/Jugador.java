@@ -59,7 +59,11 @@ public class Jugador
     {
         try {
             byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres bacios
-            in.read(buffer);
+            //[P,e,p,i,t,o,,,,,,,,,,,,,,,,,,,,,,,,,,,,,]
+            int nb = in.read(buffer);
+            ByteArrayOutputStream baos = new  ByteArrayOutputStream();
+            baos.write(buffer, 0, nb);
+            
             String nick = new String(buffer,"UTF-8"); //en buffer esta el nick
         } catch (IOException ex) {  
             nick = null;
