@@ -30,7 +30,6 @@ public class Cliente
     private JButton tijera;
     private JButton jugar;    
     private JPanel panel;
-    private JTextField nombre;
     private JTextArea txtChatGlobal;
   
     private Socket cliente;
@@ -40,21 +39,18 @@ public class Cliente
   
     public Cliente(){
         initComponents();
-        initCommunication();
+        //initCommunication();
     }
 
     private void initComponents() {
         this.setTitle("Piedra papel tijera");
         this.setSize(700, 500);
         jugar = new JButton("Jugar");
-        nombre = new JTextField(20);
         panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         
         jugar.addActionListener(this);
-        nombre.addKeyListener(this);
         
         panel.add(jugar);
-        panel.add(nombre);
         
         this.getContentPane().add(panel);
 
@@ -65,6 +61,7 @@ public class Cliente
 
     }
 
+    /*
     private void initCommunication() {
         try{
             cliente = new Socket("localhost",9998);  
@@ -76,6 +73,7 @@ public class Cliente
         catch(Exception ex) {
         }
     }
+    */
 
     @Override
     public void actionPerformed(ActionEvent e)
