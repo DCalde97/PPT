@@ -85,7 +85,8 @@ public class servidor {
                 }
             }
             if (J2==null){
-                throw new NotFoundException ("Jugador no encontrado");
+                NotFoundException ex;
+                throw ex=new NotFoundException ("Jugador no encontrado");
             }
         } catch(NotFoundException ex){
             J2=null;
