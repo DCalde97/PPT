@@ -92,13 +92,12 @@ public class PantallaInicio
     @Override
   public void keyReleased(KeyEvent e)
   {
-    
     if (e.getKeyCode() == 10){
-      
-        initCommunication(this.nick.getText());
+        String nombre=this.nick.getText();
         this.nick.setText("");
-        //cerrar la interfad y abrir la intefad de retos
-      
+        initCommunication(nombre);
+        Cliente c1 = Cliente.nCliente(cliente,nombre);//abrir la interfaz de los retos
+        this.setVisible(false);//cerrar la interfaz
     }
   }
 }
