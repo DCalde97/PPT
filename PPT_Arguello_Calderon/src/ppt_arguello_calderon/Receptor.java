@@ -10,15 +10,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  *
  * @author Danip
  */
 public class Receptor {
+    private static ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
+    
+    public static void añadirCliente(Cliente C){
+        listaClientes.add(C);
+    }
+    
     public static void main (String args[]) throws Exception
     {
-        Receptor R1=new Receptor();
+        
+        PantallaInicio P1=new PantallaInicio();
         do {
             
         }while(true);
@@ -45,6 +53,7 @@ public class Receptor {
     public  String recMensaje(Socket sck)
     {
         String mensaje;
+        //CAMBIAR
         try {
             byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres bacios
             //[P,e,p,i,t,o,,,,,,,,,,,,,,,,,,,,,,,,,,,,,]
@@ -52,7 +61,7 @@ public class Receptor {
             ByteArrayOutputStream baos = new  ByteArrayOutputStream();
             baos.write(buffer, 0, nb);
             
-            mensaje = new String(buffer,"UTF-8"); //en buffer esta el nick
+            mensaje = new String(buffer,"UTF-8");
         } catch (IOException ex) {
             mensaje = null;
             System.out.println("No se pudo recivir el mensaje del servidor");
@@ -63,22 +72,22 @@ public class Receptor {
     
     //mensajes al servidor
     
-    public void mensaje (String nick, String receptor, String opcion) {
+    public static void mensaje (String nick, String receptor, String opcion, Socket Cliente) {//reto,aceptado,denegado
         String mensaje=null;
         mensaje.concat("RETO"+nick +"@"+ receptor +"@"+ opcion);
-        sendMessage(mensaje);
+        sendMessage(mensaje, Cliente);
     }
     
-    public void mensaje (int idPartida,String jugada) {
+    public void mensaje (int idPartida,String jugada, Socket Cliente) {
         String mensaje=null;
         mensaje.concat("PARTIDA"+idPartida +"@"+ jugada);
-        sendMessage(mensaje);
+        sendMessage(mensaje, Cliente);
     }
     
-    private void sendMessage(String mensaje)
+    private static void sendMessage(String mensaje, Socket Cliente)
     {
         try{
-          this.flujoEscritura.write(mensaje.getBytes());
+          Cliente.getOutputStream().write(mensaje.getBytes());
         }
         catch(Exception ex){
             System.out.println("No se pudo leer el nick del Jugador");
