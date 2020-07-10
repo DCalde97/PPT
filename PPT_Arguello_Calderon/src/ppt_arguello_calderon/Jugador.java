@@ -114,43 +114,26 @@ public class Jugador
         return igual;
     }
     
-    Thread hiloLectura = new Thread(new Runnable()
+    public void run() {
+    while (true)
     {
-        @Override
-        public void run()
-        {
-            while (true){         
-                try{
-                    byte buffer[] = new byte[1024];
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    int nb = 0;
-                    do{
-                        nb = in.read(buffer);
-                        baos.write(buffer, 0, nb);
-                    }while (nb>0 && in.available()>0);
-
-                System.out.println("\t\t\tLlegando..." + new String(baos.toByteArray()));
-                //Recibe el mensaje, hay que mostrar por pantalla cuando el J2 acepte el reto
-                //Cuando J2 acepte el reto se recibe su confirmación
-                //mandar confirmacion al servidor
-                }catch (Exception ex){
-                    System.out.println("Error de comunicación");
-                }
-            }
-        }
-    });
-    
-    public String reciveMensage(){
-        String mensaje=null;
-        try {
-            byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres vacios
-            in.read(buffer);
-            mensaje = new String(buffer,"UTF-8"); //en buffer esta el nick
-        } catch (IOException ex) {
-          Logger.getLogger(Jugador.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return mensaje;
-    }
+      try{
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int nb = 0;
+        do{
+          nb = this.in.read(buffer);
+          baos.write(buffer, 0, nb);
+        }while (nb>0 && this.in.available()>0);
+        
+        //Retransmitir a todos los demas usuarios/clientes
+        
+        servidor.Retransmitir(baos);
+      }catch (Exception ex){
+        
+      } 
+    } 
+  }
     
     //Función que actualiza los datos del fichero de jugadores/puntuaciones
     public boolean actualizarFichero() {
