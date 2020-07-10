@@ -5,6 +5,7 @@
  */
 package ppt_arguello_calderon;
 
+import java.io.ByteArrayOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
  * @author ASUS
  */
 public class servidor {
-    //El servidor
+    
     private static ArrayList<Jugador> jugadoresConectados = new ArrayList<>();
     
     public static void main (String args[]) throws Exception
@@ -93,5 +94,22 @@ public class servidor {
         }
         return J2;
     }
+    
+    public static void Retransmitir(ByteArrayOutputStream baos) {
+    System.out.println("Retransmitiendo...");
+    String elmensaje = new String(baos.toByteArray());
+    String[] partes= elmensaje.split("@");
+    String mensaje = partes[0];
+    String destino = partes[1];
+    for(int i =0;i<jugadoresConectados.size();i++){
+        if (jugadoresConectados.get(i).equals(destino)){
+            jugadoresConectados.get(i).sendMessage(mensaje);
+            break;
+        }
+      
+      
+    }
+   
+  }
        
 }
