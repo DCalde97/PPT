@@ -6,9 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -25,31 +28,36 @@ public class Cliente
     extends JFrame
     implements ActionListener, Runnable, KeyListener {
     
-    private JButton piedra;
-    private JButton papel;
-    private JButton tijera;
-    private JButton jugar;    
+    
+    private JButton jugar;
+    private JTextField adversario;    
     private JPanel panel;
-    private JTextArea txtChatGlobal;
-  
+    private String nick;
     private Socket cliente;
     private InputStream flujoLectura;
     private OutputStream flujoEscritura;
-  
-  
-    public Cliente(){
+    
+    private Cliente(Socket cliente,String nick){
+        this.nick=nick;
         initComponents();
-        //initCommunication();
+        initCommunication(cliente);
+    }
+    
+    public static Cliente nCliente(Socket cliente,String nick) {
+        Cliente C = new Cliente(cliente,nick);
+        Receptor.añadirCliente(C);
+        return C;
     }
 
     private void initComponents() {
         this.setTitle("Piedra papel tijera");
         this.setSize(700, 500);
+        adversario = new JTextField(20);
         jugar = new JButton("Jugar");
         panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         
+        adversario.addKeyListener(this);
         jugar.addActionListener(this);
-        
         panel.add(jugar);
         
         this.getContentPane().add(panel);
@@ -61,10 +69,9 @@ public class Cliente
 
     }
 
-    /*
-    private void initCommunication() {
+    
+    private void initCommunication(Socket cliente) {
         try{
-            cliente = new Socket("localhost",9998);  
             this.flujoLectura = cliente.getInputStream();
             this.flujoEscritura = cliente.getOutputStream();
             Thread hiloLectura = new Thread(this);
@@ -73,7 +80,7 @@ public class Cliente
         catch(Exception ex) {
         }
     }
-    */
+    
 
     @Override
     public void actionPerformed(ActionEvent e)
@@ -110,7 +117,11 @@ public class Cliente
     @Override
     public void keyReleased(KeyEvent e)
     {
-      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      if (e.getKeyCode() == 10){
+        Receptor.mensaje(this.nick, this.adversario.getText(),"RETO" , cliente);
+        this.adversario.setText("");
+        //InterfazPartida I1 = InterfazPartida;
+    }
     }
     
   
