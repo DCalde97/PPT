@@ -7,6 +7,7 @@ package ppt_arguello_calderon;
 public class Partida 
 extends Thread
 {
+    private int id;
     private Jugador J1;
     private Jugador J2;
     private int puntuacionJ1;
@@ -14,7 +15,8 @@ extends Thread
     private int rondas;
     private int tiempoRonda;
 
-    public Partida(Jugador J1, Jugador J2) {
+    public Partida(Jugador J1, Jugador J2,int id) {
+        this.id=id;
         this.J1 = J1;
         this.J2 = J2;
         this.puntuacionJ1 = 0;
@@ -24,6 +26,10 @@ extends Thread
         this.start();
     }
 
+    public int getIdent() {
+        return id;
+    }
+    
     public Jugador getJ1() {
         return J1;
     }
@@ -78,13 +84,15 @@ extends Thread
         String opcionJ1;
         String opcionJ2;
         //mandar mensajes a J1
-        J1.sendMessage("IncioRonda");
-        J2.sendMessage("IncioRonda");
+        J1.sendMessage("IncioRonda");//partida idPartida ronda puntJ1 puntJ2 
+        J2.sendMessage("IncioRonda");//partida idPartida ronda puntJ2 puntJ1
         opcionJ1 = J1.reciveMensage();
         opcionJ2 = J2.reciveMensage();
         ganador=determinaGanador(opcionJ1, opcionJ2);
         asignaPuntuacion(ganador);
     }
+    
+    
     
     public int determinaGanador(String OP1, String OP2){
         int ganador;
