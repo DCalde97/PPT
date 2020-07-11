@@ -7,8 +7,8 @@ package ppt_arguello_calderon;
 public class Covid 
 extends Partida{
     
-    public Covid (Jugador J1, Jugador J2){    
-        super(J1,J2);
+    public Covid (Jugador J1, Jugador J2,int id){    
+        super(J1,J2,id);
         this.start();     
     }
     
