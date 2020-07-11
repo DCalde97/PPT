@@ -35,6 +35,22 @@ public class PantallaInicio
     public PantallaInicio() {
         initComponents();
     }
+
+    public JTextField getNick() {
+        return nick;
+    }
+
+    public Socket getCliente() {
+        return cliente;
+    }
+
+    public InputStream getFlujoLectura() {
+        return flujoLectura;
+    }
+
+    public OutputStream getFlujoEscritura() {
+        return flujoEscritura;
+    }
     
     
     
