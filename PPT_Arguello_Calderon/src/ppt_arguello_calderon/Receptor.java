@@ -25,11 +25,60 @@ public class Receptor {
     
     public static void main (String args[]) throws Exception
     {
-        
         PantallaInicio P1=new PantallaInicio();
-        do {
-            
-        }while(true);
+        Thread hiloLectura = new Thread(new Runnable()
+        {
+          @Override
+          public void run()
+          {
+            while (true){
+
+              try{
+                byte buffer[] = new byte[1024];
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                int nb = 0;
+                do{
+                  nb = P1.getFlujoLectura().read(buffer);
+                  baos.write(buffer, 0, nb);
+                }while (nb>0 && P1.getFlujoLectura().available()>0);
+                evaluaMensaje(new String(baos.toByteArray()));
+                System.out.println("\t\t\tLlegando..." + new String(baos.toByteArray()));
+
+              }catch (Exception ex){
+
+              }
+
+            }
+          }
+        });
+        hiloLectura.start();
+    }
+    
+    private static void evaluaMensaje(String elmensaje) {
+        String[] partes= elmensaje.split("@");
+        String R_P = partes[0];
+        if (R_P.equals("RETO")) {
+            String emisor = partes[1];
+            String receptor = partes[2];
+            String mensaje = partes[3];
+            if (mensaje.equals("PROPUESTO")){
+                
+            } else if (mensaje.equals("ACEPTADO")) {
+                
+            } else if (mensaje.equals("DENEGADO")) {
+                
+            } else {
+                System.out.println("No se pudo decidir si PROPUESTO, ACEPTADO o DENEGADO");
+            }
+        } else if (R_P.equals("PARTIDA")) {
+            String idPartida = partes[1];
+            String ronda = partes[2];
+            String miPunt = partes[3];
+            String suPunt = partes[4];
+        } else {
+            System.out.println("No se pudo decidir si RETO o PARTIDA");
+        }
+        
     }
     
     private Socket cliente;
