@@ -20,12 +20,14 @@ import java.util.ArrayList;
 public class servidor {
     
     private static ArrayList<Jugador> jugadoresConectados = new ArrayList<>();
+    public static ArrayList<Partida> partidasIniciadas = new ArrayList<>();
     
     public static void main (String args[]) throws Exception
     {
         ServerSocket server = new ServerSocket(10001);
         System.out.println("Servidor Arrancado");
-
+        
+        /*
         do{
             Socket sck =  server.accept();  
             System.out.println("Alguien conectado...");  //quitar eso
@@ -41,39 +43,33 @@ public class servidor {
             //implementar algo cuando se cancela la partida
                 //String resp=buffer.toString().getBytes("UTF-8");
             //if(){
-                creaPartida(J1,J2);
+            creaPartida(J1,J2);
             //}
+        }while (true);
+        */
+        
+        
+        do{
+            Socket sck =  server.accept();  
+            System.out.println("Alguien conectado...");
+            Jugador J1 = Jugador.newJugador(sck);
+            jugadoresConectados.add(J1);
+            listaNicks(J1);//revisar en cliente
+
+      
         }while (true);
 
     }
-    
-    private static void creaPartida(Jugador J1, Jugador J2){
-        int rand;
-            rand = (int) (Math.random()*6+1);           
-            if (rand!=6) {              
-                Partida P1=new Partida(J1,J2);
-                //return P1;
-            }else{
-                rand = (int) (Math.random()*2+1);
-                if (rand==1) {
-                    Covid C1=new Covid(J1,J2);
-                    //return C1;
-                }else{
-                    Covid C1=new Covid(J2,J1);
-                    //return C1;
-                }    
-            }       
-    } 
 
     private static void listaNicks(Jugador J1) {
         String listaNicks="";
         for(Jugador unJugador : jugadoresConectados){
-            listaNicks = listaNicks.concat(unJugador.getNick()+";");
+            listaNicks = listaNicks.concat(unJugador.getNick()+"@");
         }
         J1.sendMessage(listaNicks);
     }
 
-    private static Jugador buscarJugador(String nick) {
+    public static Jugador buscarJugador(String nick) {
         
         Jugador J2=null;
         try{
@@ -81,8 +77,6 @@ public class servidor {
                 if (unJugador.equals(nick)){
                     J2=unJugador;
                     break;
-                } else {
-                    J2=null;
                 }
             }
             if (J2==null){
@@ -95,21 +89,15 @@ public class servidor {
         return J2;
     }
     
-    public static void Retransmitir(ByteArrayOutputStream baos) {
-    System.out.println("Retransmitiendo...");
-    String elmensaje = new String(baos.toByteArray());
-    String[] partes= elmensaje.split("@");
-    String mensaje = partes[0];
-    String destino = partes[1];
-    for(int i =0;i<jugadoresConectados.size();i++){
-        if (jugadoresConectados.get(i).equals(destino)){
-            jugadoresConectados.get(i).sendMessage(mensaje);
-            break;
+    public static void Retransmitir(String elmensaje) {
+        String[] partes= elmensaje.split("@");
+        String destino = partes[2];
+        for(int i =0;i<jugadoresConectados.size();i++){
+            if (jugadoresConectados.get(i).equals(destino)){
+                jugadoresConectados.get(i).sendMessage(elmensaje);
+                break;
+            }
         }
-      
-      
     }
-   
-  }
        
 }
