@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static ppt_arguello_calderon.servidor.partidasIniciadas;
  
 /**
  *
@@ -125,15 +126,68 @@ public class Jugador
           nb = this.in.read(buffer);
           baos.write(buffer, 0, nb);
         }while (nb>0 && this.in.available()>0);
-        
-        //Retransmitir a todos los demas usuarios/clientes
-        
-        servidor.Retransmitir(baos);
-      }catch (Exception ex){
-        
+            //Retransmitir a todos los demas usuarios/clientes
+            evaluaMensaje(new String(baos.toByteArray()));
+        }catch (Exception ex){
+
+        } 
       } 
-    } 
-  }
+    }
+    
+    private static void evaluaMensaje(String elmensaje) {
+        String[] partes= elmensaje.split("@");
+        String R_P = partes[0];
+        if (R_P.equals("RETO")) {
+            String emisor = partes[1];
+            String receptor = partes[2];
+            String mensaje = partes[3];
+            
+            if (mensaje.equals("ACEPTADO")){
+                //crear partida
+                creaPartida(servidor.buscarJugador(receptor),servidor.buscarJugador(emisor));
+                servidor.Retransmitir(elmensaje);
+            } else if (mensaje.equals("DENEGADO") || mensaje.equals("PROPUESTO")) {
+                servidor.Retransmitir(elmensaje);
+            } else {
+                System.out.println("No se pudo decidir si PROPUESTO, ACEPTADO o DENEGADO");
+            }
+        } else if (R_P.equals("PARTIDA")) {
+            String idPartida = partes[1];
+            String ronda = partes[2];
+            String miPunt = partes[3];
+            String suPunt = partes[4];
+        } else {
+            System.out.println("No se pudo decidir si RETO o PARTIDA");
+        }
+        
+    }
+    
+    private static void creaPartida(Jugador J1, Jugador J2){
+        int rand = (int) (Math.random()*6+1);
+        int id=generaId();
+        if (rand!=6) {
+            Partida P1=new Partida(J1,J2,id);
+            partidasIniciadas.add(P1);
+            //return P1;
+        }else{
+            rand = (int) (Math.random()*2+1);
+            Covid C1;
+            if (rand==1) {
+                C1=new Covid(J1,J2,id);
+                //return C1;
+            }else{
+                C1=new Covid(J2,J1,id);
+                //return C1;
+            }
+            partidasIniciadas.add(C1);
+        }
+    }
+    
+    private static int generaId(){
+        int id;
+        id=partidasIniciadas.get(partidasIniciadas.size()).getIdent()+1;
+        return id;
+    }
     
     //Función que actualiza los datos del fichero de jugadores/puntuaciones
     public boolean actualizarFichero() {
