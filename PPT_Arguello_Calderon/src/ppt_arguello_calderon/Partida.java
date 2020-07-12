@@ -8,12 +8,13 @@ public class Partida
 extends Thread
 {
     private int id;
-    private Jugador J1;
-    private Jugador J2;
+    public Jugador J1;
+    public Jugador J2;
     private int puntuacionJ1;
     private int puntuacionJ2;
     private int rondas;
     private int tiempoRonda;
+    public int confirmacionMensaje;
 
     public Partida(Jugador J1, Jugador J2,int id) {
         this.id=id;
@@ -23,7 +24,9 @@ extends Thread
         this.puntuacionJ2 = 0;
         this.rondas = 5;
         this.tiempoRonda = 10;
+        this.confirmacionMensaje = 0;
         this.start();
+        
     }
 
     public int getIdent() {
@@ -42,6 +45,14 @@ extends Thread
         return puntuacionJ1;
     }
 
+    public void setJ1(Jugador J1) {
+        this.J1 = J1;
+    }
+
+    public void setJ2(Jugador J2) {
+        this.J2 = J2;
+    }
+
     public int getPuntuacionJ2() {
         return puntuacionJ2;
     }
@@ -53,6 +64,15 @@ extends Thread
     public void setRondas(int rondas) {
         this.rondas = rondas;
     }
+    
+    public void setConfirmacionMensaje(int confirmacionMensaje) {
+        this.confirmacionMensaje = confirmacionMensaje;
+    }
+
+    public int getConfirmacionMensaje() {
+        return confirmacionMensaje;
+    }
+    
     
     public int getTiempoRonda() {
         return tiempoRonda;
@@ -69,29 +89,40 @@ extends Thread
 
     public void run()
     {
-        int numEjecuciones = 0;
+        /*int numEjecuciones = 0;
         while (true)
         {   
             while(this.rondas>0 && this.puntuacionJ1<3 && this.puntuacionJ2<3) {
                 ronda(this.J1,this.J2);
                 this.rondas--;
             }
-        }
+        }*/
+        
+        Reloj R1 = new Reloj();
+        
+        do {            
+           
+        } while (this.confirmacionMensaje < 2);
+        
+        int ganador= determinaGanador(J1.getOpcion(), J2.getOpcion());
+        asignaPuntuacion(ganador);
+        setRondas(getRondas()-1);
+        confirmacionMensaje=0;
     }
     
-    public void ronda(Jugador J1, Jugador J2) {
+    /*public void ronda(Jugador J1, Jugador J2) {
         int ganador;
         String opcionJ1;
         String opcionJ2;
         //mandar mensajes a J1
+        
         J1.sendMessage("IncioRonda");//partida idPartida ronda puntJ1 puntJ2 
         J2.sendMessage("IncioRonda");//partida idPartida ronda puntJ2 puntJ1
         opcionJ1 = J1.reciveMensage();
         opcionJ2 = J2.reciveMensage();
         ganador=determinaGanador(opcionJ1, opcionJ2);
         asignaPuntuacion(ganador);
-    }
-    
+}*/ 
     
     
     public int determinaGanador(String OP1, String OP2){
