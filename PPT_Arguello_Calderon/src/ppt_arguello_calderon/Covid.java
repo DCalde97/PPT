@@ -13,37 +13,22 @@ extends Partida{
     }
     
     public void run()
-      {
-        int numEjecuciones = 0;
-        while (true)
-        {   
-            while(getRondas()>0 && getPuntuacionJ1()<3 && getPuntuacionJ2()<3) {
-                
-                if (getRondas()>3) {
-                    rondaCovid(getJ1(),getJ2());
-                }else{
-                    ronda(getJ1(),getJ2());
-                }
-                setRondas(getRondas()-1);
-            }
-        }
-    }
+    {
+  
+        Reloj R1 = new Reloj();
         
-    
-    private void rondaCovid(Jugador J1, Jugador J2) {
+        do {            
+           
+        } while (this.confirmacionMensaje < 2);
         int ganador;
-        Jugador Ganador=null;
-        String opcionJ1;
-        String opcionJ2;
-        //mandar mensajes a J1
-        J1.sendMessage("IncioRonda");
-        J2.sendMessage("IncioRonda");
-        opcionJ1 = J1.reciveMensage();
-        opcionJ2 = J2.reciveMensage();
-        
-        J1.setRondasGanadas(J1.getRondasGanadas()+1);
-        setPuntuacionJ1(getPuntuacionJ1()+1);
-        //se puede mandar mensajes de info cuando suban puntos y cambien rondas
+        if (getRondas()>3) {
+            ganador=1;
+        }else{
+            ganador= determinaGanador(J1.getOpcion(), J2.getOpcion());
+        }
+        setRondas(getRondas()-1);
+        asignaPuntuacion(ganador);
+        confirmacionMensaje=0;
     }
 
     //crear exception personalizada
