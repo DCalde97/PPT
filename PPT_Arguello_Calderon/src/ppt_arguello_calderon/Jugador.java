@@ -17,7 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static ppt_arguello_calderon.servidor.partidasIniciadas;
+import static ppt_arguello_calderon.Servidor.partidasIniciadas;
  
 /**
  *
@@ -34,6 +34,7 @@ public class Jugador
   OutputStream ou;
   private int partidasGanadas;
   private int rondasGanadas;
+  private String opcion;
 
   public static Jugador newJugador(Socket sck)
   {
@@ -76,6 +77,16 @@ public class Jugador
     public String getNick(){
         return this.nick;
     }
+    
+    public String getOpcion(){
+        return this.opcion;
+    }
+
+    public void setOpcion(String opcion) {
+        this.opcion = opcion;
+    }
+    
+
     public void setNick(String nick){
         this.nick=nick;
     }
@@ -144,23 +155,30 @@ public class Jugador
             
             if (mensaje.equals("ACEPTADO")){
                 //crear partida
-                creaPartida(servidor.buscarJugador(receptor),servidor.buscarJugador(emisor));
-                servidor.Retransmitir(elmensaje);
+                
+                creaPartida(Servidor.buscarJugador(receptor),Servidor.buscarJugador(emisor));
+                Servidor.Retransmitir(elmensaje);
             } else if (mensaje.equals("DENEGADO") || mensaje.equals("PROPUESTO")) {
-                servidor.Retransmitir(elmensaje);
+                Servidor.Retransmitir(elmensaje);
             } else {
                 System.out.println("No se pudo decidir si PROPUESTO, ACEPTADO o DENEGADO");
             }
         } else if (R_P.equals("PARTIDA")) {
             String idPartida = partes[1];
-            String ronda = partes[2];
-            String miPunt = partes[3];
-            String suPunt = partes[4];
+            String jugada = partes[2];
+            String nick=partes[3];
+            Partida P1 = Servidor.buscarPartida(Integer.parseInt(idPartida));
+            P1.setConfirmacionMensaje(P1.getConfirmacionMensaje()+1);
+            Jugador J1 = Servidor.buscarJugador(nick);
+            J1.setOpcion(jugada); 
+           
         } else {
             System.out.println("No se pudo decidir si RETO o PARTIDA");
         }
         
     }
+    
+    
     
     private static void creaPartida(Jugador J1, Jugador J2){
         int rand = (int) (Math.random()*6+1);
