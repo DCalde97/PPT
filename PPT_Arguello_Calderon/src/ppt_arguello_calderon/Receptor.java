@@ -73,7 +73,7 @@ public class Receptor {
     
     /*Protocolos utilizados:
     reto @ emisor @ destinatario @ propuesto/aceptado/denegado/
-    partida @ identificadorPartida @ ronda @ puntuacion1 @ puntuacion2
+    partida @ identificadorPartida @ ronda @ puntuacion1 @ puntuacion2 @ emisor
     partida @ identificadorPartida @ piedra/papel/tijera/rendirse*/
     private static void evaluaMensaje(String elmensaje) {
         String[] partes= elmensaje.split("@");
@@ -132,9 +132,9 @@ public class Receptor {
         sendMessage(mensaje, Cliente);
     }
     
-    public void mensaje (int idPartida,String jugada, Socket Cliente) {
+    public void mensaje (int idPartida,String jugada, Socket Cliente, String emisor) {
         String mensaje=null;
-        mensaje.concat("PARTIDA"+idPartida +"@"+ jugada);
+        mensaje.concat("PARTIDA"+idPartida +"@"+ jugada + "@" + emisor);
         sendMessage(mensaje, Cliente);
     }
     
