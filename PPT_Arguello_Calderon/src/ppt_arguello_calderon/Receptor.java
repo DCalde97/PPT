@@ -17,6 +17,7 @@ import java.util.ArrayList;
  * @author Danip
  */
 public class Receptor {
+    
     private static ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
     
     public static void añadirCliente(Cliente C){
@@ -54,6 +55,26 @@ public class Receptor {
         hiloLectura.start();
     }
     
+    private Socket cliente;
+    private InputStream flujoLectura;
+    private OutputStream flujoEscritura;
+
+    public Receptor() {
+        try{
+            cliente = new Socket("localhost",9998);
+            this.flujoLectura = cliente.getInputStream();
+            this.flujoEscritura = cliente.getOutputStream();
+            Thread hiloLectura = new Thread((Runnable) this);
+            hiloLectura.start();
+        }
+        catch(Exception ex) {
+        }
+    }
+    
+    /*Protocolos utilizados:
+    reto @ emisor @ destinatario @ propuesto/aceptado/denegado/
+    partida @ identificadorPartida @ ronda @ puntuacion1 @ puntuacion2
+    partida @ identificadorPartida @ piedra/papel/tijera/rendirse*/
     private static void evaluaMensaje(String elmensaje) {
         String[] partes= elmensaje.split("@");
         String R_P = partes[0];
@@ -79,22 +100,6 @@ public class Receptor {
             System.out.println("No se pudo decidir si RETO o PARTIDA");
         }
         
-    }
-    
-    private Socket cliente;
-    private InputStream flujoLectura;
-    private OutputStream flujoEscritura;
-
-    public Receptor() {
-        try{
-            cliente = new Socket("localhost",9998);
-            this.flujoLectura = cliente.getInputStream();
-            this.flujoEscritura = cliente.getOutputStream();
-            Thread hiloLectura = new Thread((Runnable) this);
-            hiloLectura.start();
-        }
-        catch(Exception ex) {
-        }
     }
     
     //recepcion de mensajes
