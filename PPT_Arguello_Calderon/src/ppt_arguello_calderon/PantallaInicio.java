@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -72,15 +74,15 @@ public class PantallaInicio
     }
     
     
-    private void initCommunication(String id) {
+    private void initCommunication(String nick) {
         try{
-            cliente = new Socket("localhost",9998);  
+            cliente = new Socket("localhost",9998);
             this.flujoLectura = cliente.getInputStream();
             this.flujoEscritura = cliente.getOutputStream();
             Thread hiloLectura = new Thread(this);
             hiloLectura.start();
-            id=id.concat("@");
-            this.flujoEscritura.write(id.getBytes());
+            DataOutputStream out =new DataOutputStream( cliente.getOutputStream());
+            out.writeUTF(nick);
         } catch(Exception ex) {
         }
     }
@@ -109,11 +111,25 @@ public class PantallaInicio
   public void keyReleased(KeyEvent e)
   {
     if (e.getKeyCode() == 10){
-        String nombre=this.nick.getText();
-        this.nick.setText("");
-        initCommunication(nombre);
-        Cliente c1 = Cliente.nCliente(cliente,nombre);//abrir la interfaz de los retos
-        this.setVisible(false);//cerrar la interfaz
+        DataInputStream in=null;
+        try {
+            String nombre=this.nick.getText();
+            nombre="h";
+            this.nick.setText("");
+            initCommunication(nombre);
+            in = new DataInputStream( cliente.getInputStream());
+            nombre = in.readUTF();
+            Cliente c1 = Cliente.nCliente(cliente,nombre);//abrir la interfaz de los retos
+            this.setVisible(false);//cerrar la interfaz
+        } catch (IOException ex) {
+            Logger.getLogger(PantallaInicio.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                in.close();
+            } catch (IOException ex) {
+                Logger.getLogger(PantallaInicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
   }
 }
