@@ -19,6 +19,11 @@ import java.util.ArrayList;
 public class Receptor {
     
     private static ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
+    public static ArrayList<InterfazPartida> partidasIniciadas = new ArrayList<>();
+    
+    public static void añadirIPartida(InterfazPartida P){
+        partidasIniciadas.add(P);
+    }
     
     public static void añadirCliente(Cliente C){
         listaClientes.add(C);
@@ -54,25 +59,25 @@ public class Receptor {
         });
         hiloLectura.start();
     }
-    
-    private Socket cliente;
-    private InputStream flujoLectura;
-    private OutputStream flujoEscritura;
+   
+//    private Socket cliente;
+//    private InputStream flujoLectura;
+//    private OutputStream flujoEscritura;
 
-    public Receptor() {
-        try{
-            cliente = new Socket("localhost",9998);
-            this.flujoLectura = cliente.getInputStream();
-            this.flujoEscritura = cliente.getOutputStream();
-            Thread hiloLectura = new Thread((Runnable) this);
-            hiloLectura.start();
-        }
-        catch(Exception ex) {
-        }
-    }
+//    public Receptor() {
+//        try{
+//            cliente = new Socket("localhost",9998);
+//            this.flujoLectura = cliente.getInputStream();
+//            this.flujoEscritura = cliente.getOutputStream();
+//            Thread hiloLectura = new Thread((Runnable) this);
+//            hiloLectura.start();
+//        }
+//        catch(Exception ex) {
+//        }
+//    }
     
     /*Protocolos utilizados:
-    reto @ emisor @ destinatario @ propuesto/aceptado/denegado/
+    reto @ emisor @ receptor @ propuesto/aceptado/denegado/
     partida @ identificadorPartida @ ronda @ puntuacion1 @ puntuacion2 @ emisor
     partida @ identificadorPartida @ piedra/papel/tijera/rendirse*/
     private static void evaluaMensaje(String elmensaje) {
@@ -82,12 +87,18 @@ public class Receptor {
             String emisor = partes[1];
             String receptor = partes[2];
             String mensaje = partes[3];
+            String id = partes[4];
+            Cliente C1=buscarCliente(receptor);
             if (mensaje.equals("PROPUESTO")){
-                
+                //preguntar por la interfad de cliente al usuario si acepta el reto o no una vez preguntado que nos lo devuelva
+                String m="ACEPTADO";
+                mensaje(receptor,emisor,m,C1.getCliente());
             } else if (mensaje.equals("ACEPTADO")) {
-                
+                //iniciar interfad partida
+                //mandar mensaje de PARTIDA
+                mensaje(receptor,emisor,"PARTIDA",C1.getCliente(),id);
             } else if (mensaje.equals("DENEGADO")) {
-                
+                //mostrat por pantalla un mensaje de que se ha denegado el reto
             } else {
                 System.out.println("No se pudo decidir si PROPUESTO, ACEPTADO o DENEGADO");
             }
@@ -102,39 +113,65 @@ public class Receptor {
         
     }
     
+    public static Cliente buscarCliente(String nick) {
+        
+        Cliente C=null;
+        try{
+            for(Cliente unCliente : listaClientes){
+                if (unCliente.equals(nick)){
+                    C=unCliente;
+                    break;
+                }
+            }
+            if (C==null){
+                NotFoundException ex;
+                throw ex=new NotFoundException ("Cliente no encontrado");
+            }
+        } catch(NotFoundException ex){
+            C=null;
+        }
+        return C;
+    }
+    
     //recepcion de mensajes
     
-    public  String recMensaje(Socket sck)
-    {
-        String mensaje;
-        //CAMBIAR
-        try {
-            byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres bacios
-            //[P,e,p,i,t,o,,,,,,,,,,,,,,,,,,,,,,,,,,,,,]
-            int nb = flujoLectura.read(buffer);
-            ByteArrayOutputStream baos = new  ByteArrayOutputStream();
-            baos.write(buffer, 0, nb);
-            
-            mensaje = new String(buffer,"UTF-8");
-        } catch (IOException ex) {
-            mensaje = null;
-            System.out.println("No se pudo recivir el mensaje del servidor");
-        }
-        return mensaje;
-    }
+//    public  String recMensaje(Socket sck)
+//    {
+//        String mensaje;
+//        //CAMBIAR
+//        try {
+//            byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres bacios
+//            //[P,e,p,i,t,o,,,,,,,,,,,,,,,,,,,,,,,,,,,,,]
+//            int nb = flujoLectura.read(buffer);
+//            ByteArrayOutputStream baos = new  ByteArrayOutputStream();
+//            baos.write(buffer, 0, nb);
+//            
+//            mensaje = new String(buffer,"UTF-8");
+//        } catch (IOException ex) {
+//            mensaje = null;
+//            System.out.println("No se pudo recivir el mensaje del servidor");
+//        }
+//        return mensaje;
+//    }
     
     
     //mensajes al servidor
     
-    public static void mensaje (String nick, String receptor, String opcion, Socket Cliente) {//reto,aceptado,denegado
+    public static void mensaje (String nick, String receptor, String opcion, Socket Cliente) {//reto,aceptado,denegado,partida
         String mensaje=null;
-        mensaje.concat("RETO"+nick +"@"+ receptor +"@"+ opcion);
+        mensaje.concat("RETO"+nick +"@"+ receptor +"@"+ opcion +"@");
+        sendMessage(mensaje, Cliente);
+    }
+    
+    public static void mensaje (String nick, String receptor, String opcion, Socket Cliente,String id) {//reto,aceptado,denegado,partida
+        String mensaje=null;
+        mensaje.concat("RETO"+nick +"@"+ receptor +"@"+ opcion+"@"+ id +"@");
         sendMessage(mensaje, Cliente);
     }
     
     public void mensaje (int idPartida,String jugada, Socket Cliente, String emisor) {
         String mensaje=null;
-        mensaje.concat("PARTIDA"+idPartida +"@"+ jugada + "@" + emisor);
+        mensaje.concat("PARTIDA"+idPartida +"@"+ jugada + "@" + emisor +"@");
         sendMessage(mensaje, Cliente);
     }
     
