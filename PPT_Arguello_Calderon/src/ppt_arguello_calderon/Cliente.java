@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -41,6 +42,10 @@ public class Cliente
         this.nick=nick;
         initComponents();
         initCommunication(cliente);
+    }
+
+    public Socket getCliente() {
+        return cliente;
     }
     
     public static Cliente nCliente(Socket cliente,String nick) {
@@ -93,13 +98,28 @@ public class Cliente
     @Override
     public void run()
     {
-      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-      //cuando se inicia el cliente se inicia el metod run que se encargara de 
-      //la comunicacion para retar y recivir retos es decir siempre tiene que 
-      //estar disponible para recivir mensajes
-      //si el reto mandado o el recivido son aceptados se crea una interfadpartida
-      //si es cancerlado muestra un mensaje por pantalla y sigue a la espera de 
-      //nuevos mensajes y mandar nuevos retos
+        DataInputStream in = null;
+        try {
+            
+            in = new DataInputStream( cliente.getInputStream());
+            String nicks = in.readUTF();
+            //mostrar por interfad
+            
+            //cuando se inicia el cliente se inicia el metod run que se encargara de
+            //la comunicacion para retar y recivir retos es decir siempre tiene que
+            //estar disponible para recivir mensajes
+            //si el reto mandado o el recivido son aceptados se crea una interfadpartida
+            //si es cancerlado muestra un mensaje por pantalla y sigue a la espera de
+            //nuevos mensajes y mandar nuevos retos
+        } catch (IOException ex) {
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                in.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     @Override
@@ -117,13 +137,20 @@ public class Cliente
     @Override
     public void keyReleased(KeyEvent e)
     {
-      if (e.getKeyCode() == 10){
-        Receptor.mensaje(this.nick, this.adversario.getText(),"RETO" , cliente);
-        this.adversario.setText("");
-        //InterfazPartida I1 = InterfazPartida;
-    }
+        if (e.getKeyCode() == 10){
+            Receptor.mensaje(this.nick, this.adversario.getText(),"RETO" , cliente);
+            this.adversario.setText("");
+            //InterfazPartida I1 = InterfazPartida;
+        }
     }
     
-  
-  
+    public boolean equals(String nick1){
+        boolean igual;
+        if (this.nick.equals(nick1)){
+            igual=true;
+        } else {
+            igual=false;
+        }
+        return igual;
+    }
 }
