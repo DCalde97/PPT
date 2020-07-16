@@ -31,19 +31,22 @@ public class InterfazPartida
     private JButton papel;
     private JButton tijera;
     private JPanel panel;
-    
-    private Socket cliente;
-    private InputStream flujoLectura;
-    private OutputStream flujoEscritura;
+    private int id;
 
-    public InterfazPartida(Socket cliente) {
-        this.cliente = cliente;
-        try {
-            this.flujoLectura = cliente.getInputStream();
-            this.flujoEscritura = cliente.getOutputStream();
-        } catch (IOException ex) {
-            Logger.getLogger(InterfazPartida.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public InterfazPartida(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+    
+    public static void interfazPartida(){
+        
+    }
+
+    public InterfazPartida() {
+        
         initComponents();
         
     }
@@ -55,6 +58,7 @@ public class InterfazPartida
         this.papel = new JButton("Papel");
         this.tijera = new JButton("Tijera");
         this.panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        
         
         piedra.addActionListener(this);
         papel.addActionListener(this);
