@@ -7,6 +7,12 @@ package ppt_arguello_calderon;
 public class Covid 
 extends Partida{
     
+    public static Covid nCovid (Jugador J1, Jugador J2,int id){
+        Covid P = new Covid(J1,J2,id);
+        Servidor.partidasIniciadas.add(P);
+        return P;
+    }
+    
     public Covid (Jugador J1, Jugador J2,int id){    
         super(J1,J2,id);
         this.start();     
