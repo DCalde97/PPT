@@ -12,13 +12,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.Socket;
+import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static ppt_arguello_calderon.Servidor.partidasIniciadas;
- 
+import java.io.*;
+
 /**
  *
  * @author ASUS
@@ -36,16 +37,16 @@ public class Jugador
   private int rondasGanadas;
   private String opcion;
 
-  public static Jugador newJugador(Socket sck)
+  public static Jugador newJugador(Socket sck,String nick)
   {
-      Jugador J1 = new Jugador(sck);
+      Jugador J1 = new Jugador(sck,nick);
       return J1;
   }
   
-    private Jugador(Socket sck)
+    private Jugador(Socket sck,String nick)
     {
         try{      
-          this.nick = leerNick(sck);
+          this.nick = nick;
           this.sckJugador = sck;
           this.in = this.sckJugador.getInputStream();
           this.ou = this.sckJugador.getOutputStream(); 
@@ -59,18 +60,23 @@ public class Jugador
   
     public  String leerNick(Socket sck)
     {
+        String nick;
         try {
-            byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres bacios
-            //[P,e,p,i,t,o,,,,,,,,,,,,,,,,,,,,,,,,,,,,,]
-            int nb = in.read(buffer);
-            ByteArrayOutputStream baos = new  ByteArrayOutputStream();
-            baos.write(buffer, 0, nb);
+//            byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres bacios
+//            //[P,e,p,i,t,o,,,,,,,,,,,,,,,,,,,,,,,,,,,,,]
+//            int nb = in.read(buffer);
+//            ByteArrayOutputStream baos = new  ByteArrayOutputStream();
+//            baos.write(buffer, 0, nb);
+//            String[] partes= new String(baos.toByteArray()).split("@");
+//            nick = partes[0];
+            DataInputStream in = new DataInputStream( sck.getInputStream());
+            nick=in.readUTF();
             
-            String nick = new String(buffer,"UTF-8"); //en buffer esta el nick
         } catch (IOException ex) {  
             nick = null;
             System.out.println("No se pudo leer el nick del Jugador");
         }
+        System.out.println("nick");
         return nick;
     }
   
@@ -156,10 +162,16 @@ public class Jugador
             if (mensaje.equals("ACEPTADO")){
                 //crear partida
                 
+                
+                
+            } else if (mensaje.equals("DENEGADO")) {
+                Servidor.Retransmitir(elmensaje);
+            } else if (mensaje.equals("PROPUESTO")) {
+                int id=generaId();
+                elmensaje=mensaje(emisor,receptor,mensaje,id);
+                Servidor.Retransmitir(elmensaje);
+            } else if (mensaje.equals("PARTIDA")) {
                 creaPartida(Servidor.buscarJugador(receptor),Servidor.buscarJugador(emisor));
-                Servidor.Retransmitir(elmensaje);
-            } else if (mensaje.equals("DENEGADO") || mensaje.equals("PROPUESTO")) {
-                Servidor.Retransmitir(elmensaje);
             } else {
                 System.out.println("No se pudo decidir si PROPUESTO, ACEPTADO o DENEGADO");
             }
@@ -170,7 +182,7 @@ public class Jugador
             Partida P1 = Servidor.buscarPartida(Integer.parseInt(idPartida));
             P1.setConfirmacionMensaje(P1.getConfirmacionMensaje()+1);
             Jugador J1 = Servidor.buscarJugador(nick);
-            J1.setOpcion(jugada); 
+            J1.setOpcion(jugada);
            
         } else {
             System.out.println("No se pudo decidir si RETO o PARTIDA");
@@ -178,13 +190,17 @@ public class Jugador
         
     }
     
-    
+    public static String mensaje (String nick, String receptor, String opcion, int id) {//reto,aceptado,denegado,partida
+        String mensaje=null;
+        mensaje.concat("RETO"+nick +"@"+ receptor +"@"+ opcion +"@"+id+"@");
+        return mensaje;
+    }
     
     private static void creaPartida(Jugador J1, Jugador J2){
         int rand = (int) (Math.random()*6+1);
         int id=generaId();
         if (rand!=6) {
-            Partida P1=new Partida(J1,J2,id);
+            Partida P1= Partida.nPartida(J1,J2,id);
             partidasIniciadas.add(P1);
             //return P1;
         }else{
