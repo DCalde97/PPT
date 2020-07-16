@@ -16,7 +16,13 @@ extends Thread
     private int tiempoRonda;
     public int confirmacionMensaje;
 
-    public Partida(Jugador J1, Jugador J2,int id) {
+    public static Partida nPartida (Jugador J1, Jugador J2,int id){
+        Partida P = new Partida(J1,J2,id);
+        Servidor.partidasIniciadas.add(P);
+        return P;
+    }
+    
+    public Partida (Jugador J1, Jugador J2,int id) {
         this.id=id;
         this.J1 = J1;
         this.J2 = J2;
