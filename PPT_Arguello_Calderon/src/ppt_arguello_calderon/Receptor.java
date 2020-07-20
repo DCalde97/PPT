@@ -20,7 +20,7 @@ public class Receptor {
     
     private static ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
     public static ArrayList<InterfazPartida> partidasIniciadas = new ArrayList<>();
-    
+    static PantallaInicio P1=new PantallaInicio();
     public static void añadirIPartida(InterfazPartida P){
         partidasIniciadas.add(P);
     }
@@ -31,7 +31,7 @@ public class Receptor {
     
     public static void main (String args[]) throws Exception
     {
-        PantallaInicio P1=new PantallaInicio();
+        
         Thread hiloLectura = new Thread(new Runnable()
         {
           @Override
@@ -43,15 +43,23 @@ public class Receptor {
                 byte buffer[] = new byte[1024];
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 int nb = 0;
-                do{
-                  nb = P1.getFlujoLectura().read(buffer);
-                  baos.write(buffer, 0, nb);
-                }while (nb>0 && P1.getFlujoLectura().available()>0);
-                evaluaMensaje(new String(baos.toByteArray()));
-                System.out.println("\t\t\tLlegando..." + new String(baos.toByteArray()));
+                if (P1.getFlujoLectura() != null){
+                  System.out.println("No NULO");
+                    do{
+                    nb = P1.getFlujoLectura().read(buffer);
+                      System.out.println("NB:" + nb);
+                    baos.write(buffer, 0, nb);
+                  }while (nb>0 && P1.getFlujoLectura().available()>0);
+                  evaluaMensaje(new String(baos.toByteArray()));
+                  System.out.println("\t\t\tLlegando..." + new String(baos.toByteArray()));
+                }
+                else{
+                  System.out.println("Nulo");
+                }
+                
 
               }catch (Exception ex){
-
+                System.out.println(ex.toString());
               }
 
             }
@@ -81,6 +89,7 @@ public class Receptor {
     partida @ identificadorPartida @ ronda @ puntuacion1 @ puntuacion2 @ emisor
     partida @ identificadorPartida @ piedra/papel/tijera/rendirse*/
     private static void evaluaMensaje(String elmensaje) {
+      System.out.println("El Mensaje:"  + elmensaje);
         String[] partes= elmensaje.split("@");
         String R_P = partes[0];
         if (R_P.equals("RETO")) {
@@ -108,7 +117,9 @@ public class Receptor {
             String miPunt = partes[3];
             String suPunt = partes[4];
         } else {
-            System.out.println("No se pudo decidir si RETO o PARTIDA");
+          //Aqui os falta poner un protocolo para la lista de usuarios.
+            System.out.println("No se pudo decidir si RETO o PARTIDA : " + R_P);
+            Cliente interfazCliente = Cliente.nCliente(P1.getCliente(), "Pepito");
         }
         
     }

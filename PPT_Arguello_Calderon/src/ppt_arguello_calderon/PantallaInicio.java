@@ -79,8 +79,8 @@ public class PantallaInicio
             cliente = new Socket("localhost",9998);
             this.flujoLectura = cliente.getInputStream();
             this.flujoEscritura = cliente.getOutputStream();
-            Thread hiloLectura = new Thread(this);
-            hiloLectura.start();
+            //Thread hiloLectura = new Thread(this);
+            //hiloLectura.start();
             DataOutputStream out =new DataOutputStream( cliente.getOutputStream());
             out.writeUTF(nick);
         } catch(Exception ex) {
@@ -89,47 +89,52 @@ public class PantallaInicio
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void run() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
   public void keyReleased(KeyEvent e)
   {
-    if (e.getKeyCode() == 10){
+    if (e.getKeyCode() == 10)
+    {
         DataInputStream in=null;
-        try {
+        try 
+        {
             String nombre=this.nick.getText();
-            nombre="h";
+            
             this.nick.setText("");
             initCommunication(nombre);
-            in = new DataInputStream( cliente.getInputStream());
-            nombre = in.readUTF();
+            //in = new DataInputStream( cliente.getInputStream());
+            //nombre = in.readUTF();
             Cliente c1 = Cliente.nCliente(cliente,nombre);//abrir la interfaz de los retos
             this.setVisible(false);//cerrar la interfaz
-        } catch (IOException ex) {
-            Logger.getLogger(PantallaInicio.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
+        } 
+        catch (Exception ee){
+          System.out.println(ee.toString());
+        }
+        
+        /*finally {
             try {
                 in.close();
             } catch (IOException ex) {
                 Logger.getLogger(PantallaInicio.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        }*/
     }
   }
 }

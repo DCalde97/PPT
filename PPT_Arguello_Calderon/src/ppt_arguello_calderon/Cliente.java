@@ -41,7 +41,7 @@ public class Cliente
     private Cliente(Socket cliente,String nick){
         this.nick=nick;
         initComponents();
-        initCommunication(cliente);
+        //initCommunication(cliente);
     }
 
     public Socket getCliente() {
@@ -64,6 +64,7 @@ public class Cliente
         adversario.addKeyListener(this);
         jugar.addActionListener(this);
         panel.add(jugar);
+        panel.add(adversario);
         
         this.getContentPane().add(panel);
 
@@ -80,7 +81,7 @@ public class Cliente
             this.flujoLectura = cliente.getInputStream();
             this.flujoEscritura = cliente.getOutputStream();
             Thread hiloLectura = new Thread(this);
-            hiloLectura.start();
+            //hiloLectura.start();
         }
         catch(Exception ex) {
         }
@@ -125,13 +126,13 @@ public class Cliente
     @Override
     public void keyTyped(KeyEvent e)
     {
-      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void keyPressed(KeyEvent e)
     {
-      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
