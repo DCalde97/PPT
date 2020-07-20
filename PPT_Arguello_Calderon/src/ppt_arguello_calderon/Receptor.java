@@ -116,6 +116,11 @@ public class Receptor {
             String ronda = partes[2];
             String miPunt = partes[3];
             String suPunt = partes[4];
+        } else if (R_P.equals("NICKS")){
+            //Mostrar en el panel global
+            for (int i=1; i<partes.length; i++){
+                C1.mostrarPorPanel(partes[i]);  //hay que obtener el nick
+            }
         } else {
           //Aqui os falta poner un protocolo para la lista de usuarios.
             System.out.println("No se pudo decidir si RETO o PARTIDA : " + R_P);

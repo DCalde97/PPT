@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
@@ -37,6 +38,7 @@ public class Cliente
     private Socket cliente;
     private InputStream flujoLectura;
     private OutputStream flujoEscritura;
+    private JTextArea txtChatGlobal;
     
     private Cliente(Socket cliente,String nick){
         this.nick=nick;
@@ -60,9 +62,14 @@ public class Cliente
         adversario = new JTextField(20);
         jugar = new JButton("Jugar");
         panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        txtChatGlobal  = new JTextArea(5, 20);
+        JScrollPane scrollPane = new JScrollPane(txtChatGlobal); 
+        
         
         adversario.addKeyListener(this);
         jugar.addActionListener(this);
+        txtChatGlobal.setEditable(false);
+        panel.add(txtChatGlobal);
         panel.add(jugar);
         panel.add(adversario);
         
@@ -73,6 +80,11 @@ public class Cliente
         this.setVisible(true);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+    }
+    
+    public void mostrarPorPanel(String mensaje){
+        this.txtChatGlobal.append(mensaje);
+        this.txtChatGlobal.append("\n");
     }
 
     
