@@ -1,7 +1,6 @@
 
 package ppt_arguello_calderon;
 
-import static com.sun.org.apache.xerces.internal.util.FeatureState.is;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -16,8 +15,6 @@ import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-import static ppt_arguello_calderon.Servidor.partidasIniciadas;
 import java.io.*;
 
 /**
@@ -195,13 +192,13 @@ public class Jugador
         mensaje.concat("RETO"+nick +"@"+ receptor +"@"+ opcion +"@"+id+"@");
         return mensaje;
     }
-    
+
     private static void creaPartida(Jugador J1, Jugador J2){
         int rand = (int) (Math.random()*6+1);
         int id=generaId();
         if (rand!=6) {
             Partida P1= Partida.nPartida(J1,J2,id);
-            partidasIniciadas.add(P1);
+            Servidor.partidasIniciadas.add(P1);
             //return P1;
         }else{
             rand = (int) (Math.random()*2+1);
@@ -213,13 +210,13 @@ public class Jugador
                 C1=new Covid(J2,J1,id);
                 //return C1;
             }
-            partidasIniciadas.add(C1);
+            Servidor.partidasIniciadas.add(C1);
         }
     }
     
     private static int generaId(){
         int id;
-        id=partidasIniciadas.get(partidasIniciadas.size()).getIdent()+1;
+        id=Servidor.partidasIniciadas.get(Servidor.partidasIniciadas.size()).getIdent()+1;
         return id;
     }
     
