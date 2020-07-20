@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  *
  * @author ASUS
  */
-public class Servidor {
+public class servidor {
     
     private static ArrayList<Jugador> jugadoresConectados = new ArrayList<>();
     public static ArrayList<Partida> partidasIniciadas = new ArrayList<>();
