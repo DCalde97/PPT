@@ -26,7 +26,7 @@ import javax.swing.*;
  */
 public class PantallaInicio 
     extends JFrame
-    implements ActionListener, Runnable, KeyListener {
+    implements Runnable, KeyListener {
     private JTextField nick;
     private JPanel panel;
     
@@ -94,11 +94,6 @@ public class PantallaInicio
             C.getFlujoEscritura().writeUTF(nick);
         } catch(Exception ex) {
         }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

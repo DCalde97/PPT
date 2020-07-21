@@ -30,11 +30,16 @@ extends Partida{
         if (getRondas()>3) {
             ganador=1;
         }else{
-            ganador= determinaGanador(J1.getOpcion(), J2.getOpcion());
+            ganador= determinaGanador(opcionJ1, opcionJ2);
         }
         setRondas(getRondas()-1);
         asignaPuntuacion(ganador);
         confirmacionMensaje=0;
+        String mensaje;
+        mensaje=Jugador.mensaje ( id, rondas,puntuacionJ1,puntuacionJ2);
+        J1.sendMessage(mensaje);
+        mensaje=Jugador.mensaje ( id, rondas,puntuacionJ2,puntuacionJ1);
+        J2.sendMessage(mensaje);
     }
 
     //crear exception personalizada

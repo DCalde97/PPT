@@ -7,13 +7,15 @@ package ppt_arguello_calderon;
 public class Partida 
 extends Thread
 {
-    private int id;
+    public int id;
     public Jugador J1;
     public Jugador J2;
-    private int puntuacionJ1;
-    private int puntuacionJ2;
-    private int rondas;
-    private int tiempoRonda;
+    public int puntuacionJ1;
+    public int puntuacionJ2;
+    public String opcionJ1;
+    public String opcionJ2;
+    public int rondas;
+    public int tiempoRonda;
     public int confirmacionMensaje;
 
     public static Partida nPartida (Jugador J1, Jugador J2,int id){
@@ -103,17 +105,26 @@ extends Thread
                 this.rondas--;
             }
         }*/
+        do{
+            //Reloj R1 = new Reloj();
+
+            do {
+                System.out.println("No Entro");
+            } while (this.confirmacionMensaje < 2);
+            System.out.println(opcionJ1+opcionJ2);
+            int ganador= determinaGanador(opcionJ1, opcionJ2);
+            asignaPuntuacion(ganador);
+            System.out.println("J1:"+puntuacionJ1);
+            System.out.println("J2:"+puntuacionJ1);
+            this.rondas--;
+            confirmacionMensaje=0;
+            String mensaje;
+            mensaje=Jugador.mensaje ( id, rondas,puntuacionJ1,puntuacionJ2);
+            J1.sendMessage(mensaje);
+            mensaje=Jugador.mensaje ( id, rondas,puntuacionJ2,puntuacionJ1);
+            J2.sendMessage(mensaje);
+        }while(rondas>0);
         
-        Reloj R1 = new Reloj();
-        
-        do {            
-           
-        } while (this.confirmacionMensaje < 2);
-        
-        int ganador= determinaGanador(J1.getOpcion(), J2.getOpcion());
-        asignaPuntuacion(ganador);
-        setRondas(getRondas()-1);
-        confirmacionMensaje=0;
     }
     
     /*public void ronda(Jugador J1, Jugador J2) {
@@ -137,19 +148,21 @@ extends Thread
             
             if (OP1.equals(null) && OP2.equals(null)){
              ganador =0; //nadie gana
+             System.out.println("ganador 0 null");
             }else if (OP1.equals(null)) {
                 ganador =2;
             } else if (OP2.equals(null)) {
                 ganador =1;
             } else {
                 ganador =0;
+                System.out.println("ganador 0 no se reconoce respuestas");
             }
         } else if (OP1.equals(OP2)){
             ganador=3; //empate
         }else {
-            Juego op1 = transformar(OP1);
-            Juego op2 = transformar(OP2);
-            ganador=Juego.ganador(op1,op2);
+            //Juego op1 = transformar(OP1);
+            //Juego op2 = transformar(OP2);
+            ganador=Juego.ganador(OP1,OP2);
         }
         return ganador;
     }
@@ -158,19 +171,22 @@ extends Thread
         boolean result=false;
         if (ganador==1){
             J1.setRondasGanadas(J1.getRondasGanadas()+1);
-            this.puntuacionJ1++;
+            this.puntuacionJ1=puntuacionJ1+1;
             result=true;
         } else if(ganador==2){
             J2.setRondasGanadas(J2.getRondasGanadas()+1);
-            this.puntuacionJ2++;
+            this.puntuacionJ2=puntuacionJ2+1;
             result=true;
         }else if(ganador==3){ //empate
             J1.setRondasGanadas(J1.getRondasGanadas()+1);
-            this.puntuacionJ1++;
+            this.puntuacionJ1=puntuacionJ1+1;
             J2.setRondasGanadas(J2.getRondasGanadas()+1);
-            this.puntuacionJ2++;
+            this.puntuacionJ2=puntuacionJ2+1;
             result=true;
         }else if(ganador==0){
+            System.out.println("ganador 0");
+            this.puntuacionJ1=puntuacionJ1+20;
+            this.puntuacionJ2=puntuacionJ2+20;
             result=true;
         }
         return result;
@@ -189,6 +205,14 @@ extends Thread
             op=null;
         }
         return op;
+    }
+    
+    public boolean equals(int id2) {
+        boolean t=false;
+        if (Integer.toString(this.id).equals(Integer.toString(id2))){
+            t=true;
+        }
+        return t;
     }
 }
 

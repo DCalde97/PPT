@@ -34,7 +34,6 @@ public class Receptor {
     
     public static void main (String args[]) throws Exception
     {
-        
         Thread hiloLectura = new Thread(new Runnable()
         {
           @Override
@@ -57,7 +56,7 @@ public class Receptor {
                   System.out.println("\t\t\tLlegando..." + new String(baos.toByteArray()));
                 }
                 else{
-                  System.out.println("Nulo");
+                  System.out.println("");
                 }
                 
 
@@ -99,19 +98,18 @@ public class Receptor {
             String emisor = partes[2];
             String receptor = partes[3];
             String mensaje = partes[4];
-            String id = partes[5];
+            
             if (mensaje.equals("PROPUESTO")){
                 //preguntar por la interfad de cliente al usuario si acepta el reto o no una vez preguntado que nos lo devuelva
                 InterfazReto IR=new InterfazReto(emisor);
                 
             } else if (mensaje.equals("ACEPTADO")) {
+                String id = partes[5];
                 PantallaInicio.getC().aceptado(emisor);
                 
                 //iniciar interfad partida
                 InterfazPartida P=new InterfazPartida(Integer.parseInt(id));
                 partidasIniciadas.add(P);
-                //mandar mensaje de PARTIDA
-                mensaje(receptor,emisor,"PARTIDA",id);
             } else if (mensaje.equals("DENEGADO")) {
                 PantallaInicio.getC().denegado(emisor);
             } else {
@@ -122,6 +120,7 @@ public class Receptor {
             String ronda = partes[3];
             String miPunt = partes[4];
             String suPunt = partes[5];
+            buscarIPartida(Integer.parseInt(idPartida)).mostrar( ronda, miPunt, suPunt);
         } else if (R_P.equals("NICKS")){
             //Mostrar en el panel global
             System.out.println("he entrado en NICKS");
@@ -139,6 +138,18 @@ public class Receptor {
             Cliente interfazCliente = Cliente.nCliente(P1.getCliente(), "Pepito");
         }
         
+    }
+    
+    public static InterfazPartida buscarIPartida(int id) {
+
+        InterfazPartida P=null;
+        for(InterfazPartida unaPartida : partidasIniciadas){
+            if (unaPartida.equals(id)){
+                P=unaPartida;
+                break;
+            }
+        }
+        return P;
     }
     
     public static Cliente buscarCliente(String nick) {
@@ -190,10 +201,10 @@ public class Receptor {
         sendMessage(mensaje);
     }
     
-    public static void mensaje (String nick, String receptor, String opcion,String id) {//reto,aceptado,denegado,partida
-        String mensaje=("@RETO@"+nick +"@"+ receptor +"@"+ opcion+"@"+ id +"@");
-        sendMessage(mensaje);
-    }
+//    public static void mensaje (String nick, String receptor, String opcion) {//reto,aceptado,denegado,partida
+//        String mensaje=("@RETO@"+nick +"@"+ receptor +"@"+ opcion+"@" +"@");
+//        sendMessage(mensaje);
+//    }
     
     public static void mensaje (int idPartida,String jugada) {
         String mensaje=("@PARTIDA@"+idPartida +"@"+ jugada + "@" + PantallaInicio.getC().getNick() +"@");

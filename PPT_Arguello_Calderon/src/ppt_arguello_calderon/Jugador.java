@@ -32,7 +32,7 @@ public class Jugador
   OutputStream ou;
   private int partidasGanadas;
   private int rondasGanadas;
-  private String opcion;
+  
 
   public static Jugador newJugador(Socket sck,String nick)
   {
@@ -81,15 +81,6 @@ public class Jugador
         return this.nick;
     }
     
-    public String getOpcion(){
-        return this.opcion;
-    }
-
-    public void setOpcion(String opcion) {
-        this.opcion = opcion;
-    }
-    
-
     public void setNick(String nick){
         this.nick=nick;
     }
@@ -98,15 +89,17 @@ public class Jugador
         return this.partidasGanadas;
     }
     public void setPartidasGanadas(int partidasGanadas){
+        System.out.println(partidasGanadas);
         this.partidasGanadas=partidasGanadas;
-        actualizarFichero();
+        //actualizarFichero();
     }
     public int getRondasGanadas(){
         return this.rondasGanadas;
     }
     public void setRondasGanadas(int rondasGanadas){
         this.rondasGanadas=rondasGanadas;
-        actualizarFichero();
+        System.out.println(rondasGanadas);
+        //actualizarFichero();
     } 
 
     public void sendMessage(String mensaje)
@@ -166,7 +159,7 @@ public class Jugador
                 System.out.println("\t\t\tLlegando..." + new String(baos.toByteArray()));
             }
             else{
-                System.out.println("Nulo");
+                System.out.println("");
             }
 
 
@@ -178,7 +171,7 @@ public class Jugador
     }
     
     private static void evaluaMensaje(String elmensaje) {
-        System.out.println(elmensaje);
+        
         String[] partes= elmensaje.split("@");
         System.out.println(elmensaje);
         String R_P = partes[1];
@@ -189,14 +182,19 @@ public class Jugador
             System.out.println(elmensaje);
             if (mensaje.equals("ACEPTADO")){
                 //crear partida
+                System.out.println("Aceptado");
+                int id=generaId();
+                System.out.println(id);
+                Partida.nPartida (Servidor.buscarJugador(emisor),Servidor.buscarJugador(receptor),id);
+                elmensaje=mensaje(emisor,receptor,mensaje,id);
+                Servidor.Retransmitir(elmensaje);
+                elmensaje=mensaje(receptor,emisor,mensaje,id);
+                Servidor.Retransmitir(elmensaje);
             } else if (mensaje.equals("DENEGADO")) {
                 Servidor.Retransmitir(elmensaje);
             } else if (mensaje.equals("PROPUESTO")) {
                 elmensaje=mensaje(emisor,receptor,mensaje);
-                System.out.println("Retransmito");
                 Servidor.Retransmitir(elmensaje);
-            } else if (mensaje.equals("PARTIDA")) {
-                creaPartida(Servidor.buscarJugador(receptor),Servidor.buscarJugador(emisor));
             } else {
                 System.out.println("No se pudo decidir si PROPUESTO, ACEPTADO o DENEGADO");
             }
@@ -205,9 +203,14 @@ public class Jugador
             String jugada = partes[3];
             String nick=partes[4];
             Partida P1 = Servidor.buscarPartida(Integer.parseInt(idPartida));
-            P1.setConfirmacionMensaje(P1.getConfirmacionMensaje()+1);
+            int conf=P1.confirmacionMensaje;
+            P1.confirmacionMensaje=conf+1;
             Jugador J1 = Servidor.buscarJugador(nick);
-            J1.setOpcion(jugada);
+            if (P1.getJ1().equals(J1)){
+                P1.opcionJ1=jugada;
+            } else {
+                P1.opcionJ2=jugada; 
+            }
            
         } else {
             System.out.println("No se pudo decidir si RETO o PARTIDA");
@@ -215,10 +218,22 @@ public class Jugador
         
     }
     
-    public static String mensaje (String nick, String receptor, String opcion) {//reto,aceptado,denegado,partida
+    public static String mensaje (String nick, String receptor, String opcion) {//reto,aceptado,denegado
         String m=("@RETO@"+nick +"@"+ receptor +"@"+ opcion +"@");
         return m;
     }
+    
+    public static String mensaje (String nick, String receptor, String opcion,int id) {//reto,aceptado,denegado,partida
+        String m=("@RETO@"+nick +"@"+ receptor +"@"+ opcion +"@"+id+"@");
+        return m;
+    }
+    
+    public static String mensaje (int id,int ronda,int miPunt,int suPunt) {//reto,aceptado,denegado,partida
+        String m=("@PARTIDA@"+id +"@"+ ronda +"@"+ miPunt +"@"+suPunt+"@");
+        return m;
+    }
+    
+    
 
     private static void creaPartida(Jugador J1, Jugador J2){
         int rand = (int) (Math.random()*6+1);
@@ -243,7 +258,11 @@ public class Jugador
     
     private static int generaId(){
         int id;
-        id=Servidor.partidasIniciadas.get(Servidor.partidasIniciadas.size()).getIdent()+1;
+        if (Servidor.partidasIniciadas.isEmpty()){
+            id=0;
+        } else {
+            id=(Servidor.partidasIniciadas.get(Servidor.partidasIniciadas.size()).getIdent())+1;
+        }
         return id;
     }
     

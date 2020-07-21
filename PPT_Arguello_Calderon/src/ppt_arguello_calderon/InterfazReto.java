@@ -32,7 +32,7 @@ public class InterfazReto extends JFrame
     
     private void initComponents() {
         panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        this.setTitle("Piedra-Papel-Tijera");
+        this.setTitle("Reto de "+retador);
         this.setSize(700, 500);
         this.Aceptar = new JButton("Aceptar");
         this.Denegar = new JButton("Denegar");
@@ -41,8 +41,8 @@ public class InterfazReto extends JFrame
         Aceptar.addActionListener(this);
         Denegar.addActionListener(this);
         
-        Aceptar.add(Aceptar);
-        Denegar.add(Denegar);
+        panel.add(Aceptar);
+        panel.add(Denegar);
         
         this.getContentPane().add(panel);
 
@@ -58,8 +58,10 @@ public class InterfazReto extends JFrame
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == Aceptar){
             Receptor.mensaje (PantallaInicio.getC().getNick(), retador,"ACEPTADO");
+            this.setVisible(false);
         } else if(e.getSource() == Denegar){
             Receptor.mensaje (PantallaInicio.getC().getNick(), retador,"DENEGADO");
+            this.setVisible(false);
         }
     }
 }

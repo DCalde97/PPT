@@ -57,9 +57,9 @@ public class InterfazPartida
         papel.addActionListener(this);
         tijera.addActionListener(this);
         
-        piedra.add(piedra);
-        papel.add(papel);
-        tijera.add(tijera);
+        panel.add(piedra);
+        panel.add(papel);
+        panel.add(tijera);
         
         this.getContentPane().add(panel);
 
@@ -79,11 +79,27 @@ public class InterfazPartida
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == piedra){
             Receptor.mensaje (id,"Piedra");
+            setVisible(false);
         } else if(e.getSource() == papel){
             Receptor.mensaje (id,"Papel");
+            setVisible(false);
         } else if(e.getSource() == tijera){
             Receptor.mensaje (id,"Tijera");
+            setVisible(false);
         }
+    }
+    
+    public boolean equals(int id2) {
+        boolean t=false;
+        if (Integer.toString(this.id).equals(Integer.toString(id2))){
+            t=true;
+        }
+        return t;
+    }
+    
+    public void mostrar(String ron,String miP,String suP){
+        this.setTitle("Ronda: "+ron+" Yo: "+miP+" El: "+suP);
+        setVisible(true);
     }
 
     @Override

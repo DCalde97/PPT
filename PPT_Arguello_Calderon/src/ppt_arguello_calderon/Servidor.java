@@ -59,8 +59,8 @@ public class Servidor {
             
             Jugador J1 = Jugador.newJugador(sck,recNick(sck));
             jugadoresConectados.add(J1);
-            Thread.sleep(1000);
-            listaNicks(sck);//revisar en cliente
+            Thread.sleep(100);
+            listaNicks(sck);
 
       
         }while (true);
@@ -111,19 +111,11 @@ public class Servidor {
     public static Partida buscarPartida(int id) {
 
         Partida P=null;
-        try{
-            for(Partida unaPartida : partidasIniciadas){
-                if (unaPartida.getId()==id){
-                    P=unaPartida;
-                    break;
-                }
+        for(Partida unaPartida : partidasIniciadas){
+            if (unaPartida.equals(id)){
+                P=unaPartida;
+                break;
             }
-            if (P==null){
-                NotFoundException ex;
-                throw ex=new NotFoundException ("Partida no encontrada");
-            }
-        } catch(NotFoundException ex){
-            P=null;
         }
         return P;
     }
@@ -151,13 +143,9 @@ public class Servidor {
     public static void Retransmitir(String elmensaje) {
         String[] partes= elmensaje.split("@");
         String destino = partes[3];
-        System.out.println("sig ins el for destino:  "+destino+"  mensaje:  "+elmensaje);
         for(Jugador unJugador : jugadoresConectados){
-            System.out.println("entre en el for");
             if (unJugador.getNick().equals(destino)){
-                System.out.println("entre en el if");
                 unJugador.sendMessage(elmensaje);
-                System.out.println("mande el mensaje");
                 break;
             }
         }

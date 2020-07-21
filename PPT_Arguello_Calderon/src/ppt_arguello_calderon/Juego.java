@@ -15,24 +15,24 @@ public enum Juego {
     Tijera;
 
     
-    public static int ganador(Juego yo,Juego adversario) {
+    public static int ganador(String yo,String adversario) {
         int ganador=0;
         if (yo.equals(adversario)){
-            ganador=0;
-        } else if(yo.equals(Juego.Piedra)){
-            if (yo.equals(Juego.Tijera)){
+            ganador=3;
+        } else if(yo.equals("Piedra")){
+            if (adversario.equals("Tijera")){
                 ganador = 1;
             } else {
                 ganador = 2;
             }
-        } else if(yo.equals(Juego.Papel)){
-            if (yo.equals(Juego.Piedra)){
+        } else if(yo.equals("Papel")){
+            if (adversario.equals("Piedra")){
                 ganador = 1;
             } else {
                 ganador = 2;
             }
-        } else if(yo.equals(Juego.Tijera)){
-            if (yo.equals(Juego.Papel)){
+        } else if(yo.equals("Tijera")){
+            if (adversario.equals("Papel")){
                 ganador = 1;
             } else {
                 ganador = 2;

@@ -29,10 +29,8 @@ import javax.swing.WindowConstants;
  */
 public class Cliente
     extends JFrame
-    implements ActionListener, Runnable, KeyListener {
+    implements Runnable, KeyListener {
     
-    
-    private JButton jugar;
     private JTextField adversario;    
     private JPanel panel;
     private String nick;
@@ -92,17 +90,14 @@ public class Cliente
         this.setTitle("Piedra papel tijera");
         this.setSize(700, 500);
         adversario = new JTextField(20);
-        jugar = new JButton("Jugar");
         panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         txtChatGlobal  = new JTextArea(5, 20);
-        JScrollPane scrollPane = new JScrollPane(txtChatGlobal); 
-        
+        JScrollPane scrollPane = new JScrollPane(txtChatGlobal);
         
         adversario.addKeyListener(this);
-        jugar.addActionListener(this);
+        
         txtChatGlobal.setEditable(false);
         panel.add(txtChatGlobal);
-        panel.add(jugar);
         panel.add(adversario);
         
         this.getContentPane().add(panel);
@@ -137,13 +132,6 @@ public class Cliente
     
     public void denegado(String adversario) {
         JOptionPane.showMessageDialog(this, adversario+" ha denegado el reto", "Titulo", JOptionPane.INFORMATION_MESSAGE, null);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e)
-    {
-        if (e.getSource() == jugar){
-        }
     }
 
     @Override
