@@ -24,8 +24,8 @@ import java.util.logging.Logger;
  */
 public class Servidor {
     
-    private static ArrayList<Jugador> jugadoresConectados = new ArrayList<>();
-    public static ArrayList<Partida> partidasIniciadas = new ArrayList<>();
+    private static ArrayList<Jugador> jugadoresConectados = new ArrayList<Jugador>();
+    public static ArrayList<Partida> partidasIniciadas = new ArrayList<Partida>();
     
     public static void main (String args[]) throws Exception
     {
@@ -56,9 +56,11 @@ public class Servidor {
         do{
             Socket sck =  server.accept();  
             System.out.println("Alguien conectado...");
+            
             Jugador J1 = Jugador.newJugador(sck,recNick(sck));
             jugadoresConectados.add(J1);
-            listaNicks(J1, sck);//revisar en cliente
+            Thread.sleep(1000);
+            listaNicks(sck);//revisar en cliente
 
       
         }while (true);
@@ -67,22 +69,35 @@ public class Servidor {
     
     private static String recNick(Socket sck){
         String nick=null;
+        String NICK="@NICK@";
         try {
             DataInputStream in = new DataInputStream( sck.getInputStream());
             nick = in.readUTF();
         } catch (IOException ex) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
         }
+        int id=generarIdNick(nick);
+        if (id!=0) {
+            nick=nick.concat(Integer.toString(id));
+        }
+        try {
+            DataOutputStream out =new DataOutputStream( sck.getOutputStream());
+            NICK=NICK.concat(nick);
+            System.out.print("nick:"+nick+"\n");
+            System.out.print("NICK:"+NICK+"\n");
+            out.writeUTF(NICK);
+        } catch (IOException ex) {
+            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return nick;
     }
 
-    private static void listaNicks(Jugador J1,Socket sck) {
-        String listaNicks="";
+    private static void listaNicks(Socket sck) {
+        String listaNicks="@NICKS@";
         for(Jugador unJugador : jugadoresConectados){
-            listaNicks = listaNicks.concat(unJugador.getNick()+"@");
+            listaNicks=listaNicks.concat(unJugador.getNick()+"@");
         }
-        
-        
+        System.out.print("NICKS:"+listaNicks);
         try {
             DataOutputStream out =new DataOutputStream( sck.getOutputStream());
             out.writeUTF(listaNicks);
@@ -90,6 +105,8 @@ public class Servidor {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
     
     public static Partida buscarPartida(int id) {
 
@@ -133,10 +150,14 @@ public class Servidor {
     
     public static void Retransmitir(String elmensaje) {
         String[] partes= elmensaje.split("@");
-        String destino = partes[2];
-        for(int i =0;i<jugadoresConectados.size();i++){
-            if (jugadoresConectados.get(i).equals(destino)){
-                jugadoresConectados.get(i).sendMessage(elmensaje);
+        String destino = partes[3];
+        System.out.println("sig ins el for destino:  "+destino+"  mensaje:  "+elmensaje);
+        for(Jugador unJugador : jugadoresConectados){
+            System.out.println("entre en el for");
+            if (unJugador.getNick().equals(destino)){
+                System.out.println("entre en el if");
+                unJugador.sendMessage(elmensaje);
+                System.out.println("mande el mensaje");
                 break;
             }
         }
@@ -148,6 +169,20 @@ public class Servidor {
                     P=unaPartida;
             }
         return P.getIdent()+1;
+    }
+    
+    public static int generarIdNick(String nick){
+        int codigo=0;
+            for(Jugador unJugador : jugadoresConectados){
+                System.out.println(unJugador.getNick());
+                if (unJugador.getNick().equals(nick)){
+                    codigo++;
+                    System.out.println(codigo+"coincide");
+                } else {
+                    System.out.println("falso");
+                }
+            }
+        return codigo;
     }
        
 }

@@ -129,43 +129,71 @@ public class Jugador
         return igual;
     }
     
+//    public void run() {
+//    while (true)
+//    {
+//      try{
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        byte[] buffer = new byte[1024];
+//        int nb = 0;
+//        do{
+//          nb = this.in.read(buffer);
+//          baos.write(buffer, 0, nb);
+//        }while (nb>0 && this.in.available()>0);
+//            //Retransmitir a todos los demas usuarios/clientes
+//            evaluaMensaje(new String(baos.toByteArray()));
+//        }catch (Exception ex){
+//
+//        } 
+//      } 
+//    }
+    
     public void run() {
-    while (true)
-    {
-      try{
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int nb = 0;
-        do{
-          nb = this.in.read(buffer);
-          baos.write(buffer, 0, nb);
-        }while (nb>0 && this.in.available()>0);
-            //Retransmitir a todos los demas usuarios/clientes
-            evaluaMensaje(new String(baos.toByteArray()));
-        }catch (Exception ex){
+        while (true){
 
-        } 
-      } 
+          try{
+            byte buffer[] = new byte[1024];
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            int nb = 0;
+            if (in != null){
+                System.out.println("No NULO");
+                do{
+                    nb = in.read(buffer);
+                    System.out.println("NB:" + nb);
+                    baos.write(buffer, 0, nb);
+                }while (nb>0 && in.available()>0);
+                evaluaMensaje(new String(baos.toByteArray()));
+                System.out.println("\t\t\tLlegando..." + new String(baos.toByteArray()));
+            }
+            else{
+                System.out.println("Nulo");
+            }
+
+
+          }catch (Exception ex){
+            System.out.println(ex.toString());
+          }
+
+        }
     }
     
     private static void evaluaMensaje(String elmensaje) {
+        System.out.println(elmensaje);
         String[] partes= elmensaje.split("@");
-        String R_P = partes[0];
+        System.out.println(elmensaje);
+        String R_P = partes[1];
         if (R_P.equals("RETO")) {
-            String emisor = partes[1];
-            String receptor = partes[2];
-            String mensaje = partes[3];
-            
+            String emisor = partes[2];
+            String receptor = partes[3];
+            String mensaje = partes[4];
+            System.out.println(elmensaje);
             if (mensaje.equals("ACEPTADO")){
                 //crear partida
-                
-                
-                
             } else if (mensaje.equals("DENEGADO")) {
                 Servidor.Retransmitir(elmensaje);
             } else if (mensaje.equals("PROPUESTO")) {
-                int id=generaId();
-                elmensaje=mensaje(emisor,receptor,mensaje,id);
+                elmensaje=mensaje(emisor,receptor,mensaje);
+                System.out.println("Retransmito");
                 Servidor.Retransmitir(elmensaje);
             } else if (mensaje.equals("PARTIDA")) {
                 creaPartida(Servidor.buscarJugador(receptor),Servidor.buscarJugador(emisor));
@@ -173,9 +201,9 @@ public class Jugador
                 System.out.println("No se pudo decidir si PROPUESTO, ACEPTADO o DENEGADO");
             }
         } else if (R_P.equals("PARTIDA")) {
-            String idPartida = partes[1];
-            String jugada = partes[2];
-            String nick=partes[3];
+            String idPartida = partes[2];
+            String jugada = partes[3];
+            String nick=partes[4];
             Partida P1 = Servidor.buscarPartida(Integer.parseInt(idPartida));
             P1.setConfirmacionMensaje(P1.getConfirmacionMensaje()+1);
             Jugador J1 = Servidor.buscarJugador(nick);
@@ -187,10 +215,9 @@ public class Jugador
         
     }
     
-    public static String mensaje (String nick, String receptor, String opcion, int id) {//reto,aceptado,denegado,partida
-        String mensaje=null;
-        mensaje.concat("RETO"+nick +"@"+ receptor +"@"+ opcion +"@"+id+"@");
-        return mensaje;
+    public static String mensaje (String nick, String receptor, String opcion) {//reto,aceptado,denegado,partida
+        String m=("@RETO@"+nick +"@"+ receptor +"@"+ opcion +"@");
+        return m;
     }
 
     private static void creaPartida(Jugador J1, Jugador J2){

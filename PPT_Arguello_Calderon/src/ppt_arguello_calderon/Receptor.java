@@ -6,11 +6,14 @@
 package ppt_arguello_calderon;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -91,36 +94,45 @@ public class Receptor {
     private static void evaluaMensaje(String elmensaje) {
       System.out.println("El Mensaje:"  + elmensaje);
         String[] partes= elmensaje.split("@");
-        String R_P = partes[0];
+        String R_P = partes[1];
         if (R_P.equals("RETO")) {
-            String emisor = partes[1];
-            String receptor = partes[2];
-            String mensaje = partes[3];
-            String id = partes[4];
-            Cliente C1=buscarCliente(receptor);
+            String emisor = partes[2];
+            String receptor = partes[3];
+            String mensaje = partes[4];
+            String id = partes[5];
             if (mensaje.equals("PROPUESTO")){
                 //preguntar por la interfad de cliente al usuario si acepta el reto o no una vez preguntado que nos lo devuelva
-                String m="ACEPTADO";
-                mensaje(receptor,emisor,m,C1.getCliente());
+                InterfazReto IR=new InterfazReto(emisor);
+                
             } else if (mensaje.equals("ACEPTADO")) {
+                PantallaInicio.getC().aceptado(emisor);
+                
                 //iniciar interfad partida
+                InterfazPartida P=new InterfazPartida(Integer.parseInt(id));
+                partidasIniciadas.add(P);
                 //mandar mensaje de PARTIDA
-                mensaje(receptor,emisor,"PARTIDA",C1.getCliente(),id);
+                mensaje(receptor,emisor,"PARTIDA",id);
             } else if (mensaje.equals("DENEGADO")) {
-                //mostrat por pantalla un mensaje de que se ha denegado el reto
+                PantallaInicio.getC().denegado(emisor);
             } else {
                 System.out.println("No se pudo decidir si PROPUESTO, ACEPTADO o DENEGADO");
             }
         } else if (R_P.equals("PARTIDA")) {
-            String idPartida = partes[1];
-            String ronda = partes[2];
-            String miPunt = partes[3];
-            String suPunt = partes[4];
+            String idPartida = partes[2];
+            String ronda = partes[3];
+            String miPunt = partes[4];
+            String suPunt = partes[5];
         } else if (R_P.equals("NICKS")){
             //Mostrar en el panel global
-            for (int i=1; i<partes.length; i++){
-                C1.mostrarPorPanel(partes[i]);  //hay que obtener el nick
+            System.out.println("he entrado en NICKS");
+            for (int i=2; i<partes.length; i++){
+                PantallaInicio.getC().mostrarPorPanel(partes[i]);
             }
+        } else if (R_P.equals("NICK")){
+                
+                PantallaInicio.getC().setNick(partes[2]);
+                //comprueba el servidor si el nick esta repetido y devuelve el nick modificado para que no se repitan
+                System.out.println("nick c pantalla inicio"+PantallaInicio.getC().getNick());
         } else {
           //Aqui os falta poner un protocolo para la lista de usuarios.
             System.out.println("No se pudo decidir si RETO o PARTIDA : " + R_P);
@@ -173,31 +185,30 @@ public class Receptor {
     
     //mensajes al servidor
     
-    public static void mensaje (String nick, String receptor, String opcion, Socket Cliente) {//reto,aceptado,denegado,partida
-        String mensaje=null;
-        mensaje.concat("RETO"+nick +"@"+ receptor +"@"+ opcion +"@");
-        sendMessage(mensaje, Cliente);
+    public static void mensaje (String nick, String receptor, String opcion) {//reto,aceptado,denegado,partida
+        String mensaje=("@RETO@"+nick +"@"+ receptor +"@"+ opcion +"@");
+        sendMessage(mensaje);
     }
     
-    public static void mensaje (String nick, String receptor, String opcion, Socket Cliente,String id) {//reto,aceptado,denegado,partida
-        String mensaje=null;
-        mensaje.concat("RETO"+nick +"@"+ receptor +"@"+ opcion+"@"+ id +"@");
-        sendMessage(mensaje, Cliente);
+    public static void mensaje (String nick, String receptor, String opcion,String id) {//reto,aceptado,denegado,partida
+        String mensaje=("@RETO@"+nick +"@"+ receptor +"@"+ opcion+"@"+ id +"@");
+        sendMessage(mensaje);
     }
     
-    public void mensaje (int idPartida,String jugada, Socket Cliente, String emisor) {
-        String mensaje=null;
-        mensaje.concat("PARTIDA"+idPartida +"@"+ jugada + "@" + emisor +"@");
-        sendMessage(mensaje, Cliente);
+    public static void mensaje (int idPartida,String jugada) {
+        String mensaje=("@PARTIDA@"+idPartida +"@"+ jugada + "@" + PantallaInicio.getC().getNick() +"@");
+        sendMessage(mensaje);
     }
     
-    private static void sendMessage(String mensaje, Socket Cliente)
+    private static void sendMessage(String mensaje)
     {
-        try{
-          Cliente.getOutputStream().write(mensaje.getBytes());
+        
+        try {
+            
+            PantallaInicio.getC().getFlujoEscritura().writeUTF(mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(Receptor.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch(Exception ex){
-            System.out.println("No se pudo leer el nick del Jugador");
-        }
+        
     }
 }

@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -36,9 +37,10 @@ public class Cliente
     private JPanel panel;
     private String nick;
     private Socket cliente;
-    private InputStream flujoLectura;
-    private OutputStream flujoEscritura;
+    private DataInputStream flujoLectura;
+    private DataOutputStream flujoEscritura;
     private JTextArea txtChatGlobal;
+    private static int cant;
     
     private Cliente(Socket cliente,String nick){
         this.nick=nick;
@@ -51,10 +53,40 @@ public class Cliente
     }
     
     public static Cliente nCliente(Socket cliente,String nick) {
-        Cliente C = new Cliente(cliente,nick);
-        Receptor.añadirCliente(C);
+        Cliente C=null;
+        if(cant==0){
+            C = new Cliente(cliente,nick);
+            Receptor.añadirCliente(C);
+            cant++;
+        }
         return C;
     }
+
+    public String getNick() {
+        return nick;
+    }
+
+    public void setNick(String nick) {
+        this.nick = nick;
+    }
+
+    public DataInputStream getFlujoLectura() {
+        return flujoLectura;
+    }
+
+    public void setFlujoLectura(DataInputStream flujoLectura) {
+        this.flujoLectura = flujoLectura;
+    }
+
+    public DataOutputStream getFlujoEscritura() {
+        return flujoEscritura;
+    }
+
+    public void setFlujoEscritura(DataOutputStream flujoEscritura) {
+        this.flujoEscritura = flujoEscritura;
+    }
+    
+    
 
     private void initComponents() {
         this.setTitle("Piedra papel tijera");
@@ -88,23 +120,29 @@ public class Cliente
     }
 
     
-    private void initCommunication(Socket cliente) {
-        try{
-            this.flujoLectura = cliente.getInputStream();
-            this.flujoEscritura = cliente.getOutputStream();
-            Thread hiloLectura = new Thread(this);
-            //hiloLectura.start();
-        }
-        catch(Exception ex) {
-        }
+//    private void initCommunication(Socket cliente) {
+//        try{
+//            this.flujoLectura = cliente.getDataInputStream();
+//            this.flujoEscritura = cliente.getOutputStream();
+//            //Thread hiloLectura = new Thread(this);
+//            //hiloLectura.start();
+//        }
+//        catch(Exception ex) {
+//        }
+//    }
+    
+    public void aceptado(String adversario) {
+        JOptionPane.showMessageDialog(this, adversario+" ha aceptado el reto", "Titulo", JOptionPane.INFORMATION_MESSAGE, null);
     }
     
+    public void denegado(String adversario) {
+        JOptionPane.showMessageDialog(this, adversario+" ha denegado el reto", "Titulo", JOptionPane.INFORMATION_MESSAGE, null);
+    }
 
     @Override
     public void actionPerformed(ActionEvent e)
     {
         if (e.getSource() == jugar){
-           //JOptionPane.showMessageDialog(this, "Has pulsado hola Mundo!!", "Titulo", JOptionPane.INFORMATION_MESSAGE, null);
         }
     }
 
@@ -151,8 +189,11 @@ public class Cliente
     public void keyReleased(KeyEvent e)
     {
         if (e.getKeyCode() == 10){
-            Receptor.mensaje(this.nick, this.adversario.getText(),"RETO" , cliente);
+            String adv=this.adversario.getText();
+            
             this.adversario.setText("");
+            Receptor.mensaje(this.nick, adv,"PROPUESTO");
+            
             //InterfazPartida I1 = InterfazPartida;
         }
     }

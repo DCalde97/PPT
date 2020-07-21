@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 /**
  *
@@ -35,29 +36,21 @@ public class InterfazPartida
 
     public InterfazPartida(int id) {
         this.id = id;
+        initComponents();
     }
 
     public int getId() {
         return id;
     }
     
-    public static void interfazPartida(){
-        
-    }
-
-    public InterfazPartida() {
-        
-        initComponents();
-        
-    }
     
     private void initComponents() {
+        panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         this.setTitle("Piedra-Papel-Tijera");
         this.setSize(700, 500);
         this.piedra = new JButton("Piedra");
         this.papel = new JButton("Papel");
         this.tijera = new JButton("Tijera");
-        this.panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         
         
         piedra.addActionListener(this);
@@ -67,6 +60,13 @@ public class InterfazPartida
         piedra.add(piedra);
         papel.add(papel);
         tijera.add(tijera);
+        
+        this.getContentPane().add(panel);
+
+        this.pack();
+    
+        this.setVisible(true);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
     
     
@@ -78,11 +78,11 @@ public class InterfazPartida
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == piedra){
-           
+            Receptor.mensaje (id,"Piedra");
         } else if(e.getSource() == papel){
-            
+            Receptor.mensaje (id,"Papel");
         } else if(e.getSource() == tijera){
-            
+            Receptor.mensaje (id,"Tijera");
         }
     }
 

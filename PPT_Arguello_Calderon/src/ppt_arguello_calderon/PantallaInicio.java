@@ -33,6 +33,8 @@ public class PantallaInicio
     private Socket cliente;
     private InputStream flujoLectura;
     private OutputStream flujoEscritura;
+    
+    private static Cliente C;
 
     public PantallaInicio() {
         initComponents();
@@ -53,14 +55,20 @@ public class PantallaInicio
     public OutputStream getFlujoEscritura() {
         return flujoEscritura;
     }
+
+    public static Cliente getC() {
+        return C;
+    }
+
+    
     
     
     
     private void initComponents() {
+        panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         this.setTitle("Piedra papel tijera");
         this.setSize(700, 500);
         nick = new JTextField(20);
-        panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         
         nick.addKeyListener(this);
         panel.add(nick);
@@ -81,8 +89,9 @@ public class PantallaInicio
             this.flujoEscritura = cliente.getOutputStream();
             //Thread hiloLectura = new Thread(this);
             //hiloLectura.start();
-            DataOutputStream out =new DataOutputStream( cliente.getOutputStream());
-            out.writeUTF(nick);
+            C.setFlujoEscritura(new DataOutputStream( cliente.getOutputStream()));
+            C.setFlujoLectura(new DataInputStream( cliente.getInputStream()));
+            C.getFlujoEscritura().writeUTF(nick);
         } catch(Exception ex) {
         }
     }
@@ -118,10 +127,10 @@ public class PantallaInicio
             String nombre=this.nick.getText();
             
             this.nick.setText("");
+            C=Cliente.nCliente(cliente,nombre);//abrir la interfaz de los retos
             initCommunication(nombre);
             //in = new DataInputStream( cliente.getInputStream());
             //nombre = in.readUTF();
-            Cliente c1 = Cliente.nCliente(cliente,nombre);//abrir la interfaz de los retos
             this.setVisible(false);//cerrar la interfaz
         } 
         catch (Exception ee){
