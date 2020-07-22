@@ -30,7 +30,7 @@ extends Partida{
         if (getRondas()>3) {
             ganador=1;
         }else{
-            ganador= determinaGanador(opcionJ1, opcionJ2);
+            ganador= determinaGanador();
         }
         setRondas(getRondas()-1);
         asignaPuntuacion(ganador);

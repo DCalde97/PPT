@@ -235,9 +235,8 @@ public class Jugador
     
     
 
-    private static void creaPartida(Jugador J1, Jugador J2){
+    private static void creaPartida(Jugador J1, Jugador J2,int id){
         int rand = (int) (Math.random()*6+1);
-        int id=generaId();
         if (rand!=6) {
             Partida P1= Partida.nPartida(J1,J2,id);
             Servidor.partidasIniciadas.add(P1);

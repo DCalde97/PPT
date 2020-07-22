@@ -33,6 +33,8 @@ extends Thread
         this.rondas = 5;
         this.tiempoRonda = 10;
         this.confirmacionMensaje = 0;
+        this.opcionJ1=null;
+        this.opcionJ2=null;
         this.start();
         
     }
@@ -112,8 +114,10 @@ extends Thread
                 System.out.println("No Entro");
             } while (this.confirmacionMensaje < 2);
             System.out.println(opcionJ1+opcionJ2);
-            int ganador= determinaGanador(opcionJ1, opcionJ2);
+            int ganador= determinaGanador();
             asignaPuntuacion(ganador);
+            opcionJ1=null;
+            opcionJ2=null;
             System.out.println("J1:"+puntuacionJ1);
             System.out.println("J2:"+puntuacionJ1);
             this.rondas--;
@@ -142,27 +146,27 @@ extends Thread
 }*/ 
     
     
-    public int determinaGanador(String OP1, String OP2){
+    public int determinaGanador(){
         int ganador;
-        if (OP1.equals(null) || OP2.equals(null)){ 
+        if (opcionJ1.isEmpty() || opcionJ2.isEmpty()){ 
             
-            if (OP1.equals(null) && OP2.equals(null)){
+            if (opcionJ1.isEmpty() && opcionJ2.isEmpty()){
              ganador =0; //nadie gana
              System.out.println("ganador 0 null");
-            }else if (OP1.equals(null)) {
+            }else if (opcionJ1.isEmpty()) {
                 ganador =2;
-            } else if (OP2.equals(null)) {
+            } else if (opcionJ2.isEmpty()) {
                 ganador =1;
             } else {
                 ganador =0;
                 System.out.println("ganador 0 no se reconoce respuestas");
             }
-        } else if (OP1.equals(OP2)){
+        } else if (opcionJ1.equals(opcionJ2)){
             ganador=3; //empate
         }else {
             //Juego op1 = transformar(OP1);
             //Juego op2 = transformar(OP2);
-            ganador=Juego.ganador(OP1,OP2);
+            ganador=Juego.ganador(opcionJ1,opcionJ2);
         }
         return ganador;
     }
