@@ -6,15 +6,22 @@
 package ppt_arguello_calderon;
 
 /**
- *
- * @author Danip
- */
+* Clase que se encarga de determinar el ganador de una ronda
+* @author Danip
+* @version 1.0
+* @since 01/07/2020
+*/ 
 public enum Juego {
     Piedra,
     Papel,
     Tijera;
-
-    
+   
+     /**
+     * Método que determina el ganador de una ronda
+     * @param yo String del jugador1
+     * @param adversario String del jugador2
+     * @return int con el numero que indica el ganador
+     */
     public static int ganador(String yo,String adversario) {
         int ganador=0;
         if (yo.equals(adversario)){

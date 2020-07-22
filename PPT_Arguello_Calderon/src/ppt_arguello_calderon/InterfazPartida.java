@@ -22,8 +22,11 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 /**
- *
+ * Clase cuya responsabilidad es mostrar interfaces de partida, con las que podrán
+ * interactuar dos jugadores con las opciones piedra, papel, tijera.
  * @author Danip
+ * @version 1.0
+ * @since 01/07/2020
  */
 public class InterfazPartida 
     extends JFrame
@@ -88,7 +91,11 @@ public class InterfazPartida
             setVisible(false);
         }
     }
-    
+    /**
+    * Método que comprueba si un id de partida es igual
+    * @param id2 int identificador de la segunda partida
+    * @return una variable de tipo boolean que sera true si el id es igual
+    */     
     public boolean equals(int id2) {
         boolean t=false;
         if (Integer.toString(this.id).equals(Integer.toString(id2))){
@@ -97,6 +104,12 @@ public class InterfazPartida
         return t;
     }
     
+    /**
+    * Método que muestra la puntuación de los jugadores.
+    * @param ron String que indica las rondas que faltan
+    * @param miP String que indica mi puntuación
+    * @param suP String que indica la puntuación del adversario
+    */     
     public void mostrar(String ron,String miP,String suP){
         this.setTitle("Ronda: "+ron+" Yo: "+miP+" El: "+suP);
         setVisible(true);

@@ -19,40 +19,25 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Clase cuya responsabilidad es gestionar los clientes y las partidas, y la
+ * comunicación entre estos
  * @author ASUS
+ * @version 1.0
+ * @since 01/07/2020
  */
 public class Servidor {
     
     private static ArrayList<Jugador> jugadoresConectados = new ArrayList<Jugador>();
     public static ArrayList<Partida> partidasIniciadas = new ArrayList<Partida>();
-    
+    /**
+    * El metodo main del servidor abre la conexión y se mantiene a la espera de
+    * clientes
+    */
     public static void main (String args[]) throws Exception
     {
         ServerSocket server = new ServerSocket(9998);
         System.out.println("Servidor Arrancado");
-        
-        /*
-        do{
-            Socket sck =  server.accept();  
-            System.out.println("Alguien conectado...");  //quitar eso
-            Jugador J1 = Jugador.newJugador(sck);
-            jugadoresConectados.add(J1);
-            listaNicks(J1);
-            String nick=J1.leerNick(J1.sckJugador);
-            Jugador J2=buscarJugador(nick);
-            J2.sendMessage("Reto");
-            byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres vacios
-            //recibimos la respuesta de si acepta o no el reto pero la respuesta es un int porque?
-            //despues comprobamos si acepta se crea la partida sino
-            //implementar algo cuando se cancela la partida
-                //String resp=buffer.toString().getBytes("UTF-8");
-            //if(){
-            creaPartida(J1,J2);
-            //}
-        }while (true);
-        */
-        
+
         do{
             Socket sck =  server.accept();  
             System.out.println("Alguien conectado...");
@@ -66,7 +51,14 @@ public class Servidor {
         }while (true);
 
     }
-    
+    /**
+    * Método que procesa el nick del cliente para concaternarlo en el mensaje
+    * con el protocolo que seguimos: @NICK@"nick", para añadirlo a la lista de 
+    * nicks, de la forma: @NICKS@nick1@nick2@nick3...
+    * @param sck Socket del cliente
+    * @throws Exception si no puede enviar/recibir datos por el canal de comunicación
+    * @return una variable de tipo String, el nick del jugador
+    */ 
     private static String recNick(Socket sck){
         String nick=null;
         String NICK="@NICK@";
@@ -89,6 +81,13 @@ public class Servidor {
         return nick;
     }
 
+    /**
+    * Método que proporciona la lista de nicks de todos los jugadores conectados 
+    * por el canal de comunicación
+    * @param sck Socket del cliente
+    * @throws Exception cuando no puede enviar la lista de nick por el canal de
+    * comunicación.
+    */  
     private static void listaNicks(Socket sck) {
         String listaNicks="@NICKS@";
         for(Jugador unJugador : jugadoresConectados){
@@ -102,9 +101,13 @@ public class Servidor {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    
+      
+    /**
+    * Método que busca una partida concreta en la lista de partidas iniciadas
+    * @param id es el identificador de la partida
+    * @return un objeto de tipo Partida que tiene por id el recibido. O null si
+    * no existe esa partida.
+    */   
     public static Partida buscarPartida(int id) {
 
         Partida P=null;
@@ -117,6 +120,12 @@ public class Servidor {
         return P;
     }
 
+    /**
+    * Método que busca un jugador en la lista de jugadores conectados.
+    * @param nick Identificador del jugador que se busca
+    * @throws Exception si no encuentra el jugador
+    * @return un objeto de tipo Jugador que tiene por nick el recibido por param.
+    */ 
     public static Jugador buscarJugador(String nick) {
         
         Jugador J2=null;
@@ -137,6 +146,10 @@ public class Servidor {
         return J2;
     }
     
+    /**
+    * Método que envia un mensaje a los jugadores conectados en el momento.
+    * @param elmensaje Es un String que se mostrará a todos los jugadores
+    */
     public static void Retransmitir(String elmensaje) {
         String[] partes= elmensaje.split("@");
         String destino = partes[3];
@@ -148,6 +161,10 @@ public class Servidor {
         }
     }
     
+    /**
+    * Método que genera un identificador de partida de forma incremental
+    * @return una variable de tipo int, el identificador de la partida
+    */ 
     public int generarIdPartida(){
         Partida P=null;
             for(Partida unaPartida : partidasIniciadas){
@@ -156,6 +173,14 @@ public class Servidor {
         return P.getIdent()+1;
     }
     
+    
+    /**
+    * Método que comprueba si un nick de jugador a coenctar ya existe en la lista
+    * de jugadores. En cuyo caso devuelve un valor entero !=0
+    * @param nick String nick del jugador a comprobar.
+    * @return una variable de tipo int, que será 0 si el nombre no está conectado,
+    * o 1 si existe.
+    */ 
     public static String generarIdNick(String nick){
         int codigo;
         boolean coincide=false;

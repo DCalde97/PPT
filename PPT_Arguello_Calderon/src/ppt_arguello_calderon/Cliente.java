@@ -1,4 +1,3 @@
-//instanciar una clase cliente desde el main de PPT_... por ejemplo.
 package ppt_arguello_calderon;
 
 import java.awt.FlowLayout;
@@ -24,8 +23,11 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 /**
- *
+ * Clase cuya responsabilidad es mostrar una interfaz para el cliente en la que
+ * el jugador pueda ver el panel de mensajes y tenga la opción de retar a jugadores
  * @author ASUS
+ * @version 1.0
+ * @since 01/07/2020
  */
 public class Cliente
     extends JFrame
@@ -50,6 +52,12 @@ public class Cliente
         return cliente;
     }
     
+    /**
+    * Método constructor de un nuevo cliente
+    * @param cliente Socket del cliente
+    * @param nick String con el nick del cliente
+    * @return un objeto de tipo Cliente
+    */
     public static Cliente nCliente(Socket cliente,String nick) {
         Cliente C=null;
         if(cant==0){
@@ -109,11 +117,20 @@ public class Cliente
 
     }
     
+    
+    /**
+    * Método que actualiza el contenido de los paneles de texto
+    * @param mensaje String del mensaje a mostrar en el panel de texto
+    */ 
     public void mostrarPorPanel(String mensaje){
         this.txtChatGlobal.append(mensaje);
         this.txtChatGlobal.append("\n");
     }
     
+    /**
+    * Método que muestra un mensaje al jugador en un panel.
+    * @param adversario String del jugador al que se enviará el mensaje en el panel
+    */ 
     public void aceptado(String adversario) {
         JOptionPane.showMessageDialog(this, adversario+" ha aceptado el reto", "Titulo", JOptionPane.INFORMATION_MESSAGE, null);
     }
@@ -122,6 +139,13 @@ public class Cliente
         JOptionPane.showMessageDialog(this, adversario+" ha denegado el reto", "Titulo", JOptionPane.INFORMATION_MESSAGE, null);
     }
     
+    /**
+    * Los siguientes 3 métodos muestran el mensaje correspondiente por el panel 
+    * a cada jugador
+    * @param id String del identificador partida
+    * @param miPunt String
+    * @param suPunt String 
+    */ 
     public void ganador(String id,String miPunt,String suPunt) {
         JOptionPane.showMessageDialog(this, "ENHORABUENA!!! Has ganado la partida "+id+" con un total de: "+miPunt+"-"+suPunt, "Titulo", JOptionPane.INFORMATION_MESSAGE, null);
     }
@@ -135,6 +159,9 @@ public class Cliente
     }
 
     @Override
+    /**
+    * Método run que genera un hilo por cliente
+    */
     public void run()
     {
         DataInputStream in = null;
@@ -166,6 +193,10 @@ public class Cliente
     }
 
     @Override
+    /**
+    * Método keyreleased envia una proposición de reto al adversario cuando se suelta
+    * la tecla enter
+    */ 
     public void keyReleased(KeyEvent e)
     {
         if (e.getKeyCode() == 10){
@@ -176,7 +207,11 @@ public class Cliente
             
         }
     }
-    
+    /**
+    * Método que compara un nick dado con el actual.
+    * @param nick1 String el nick a comparar con el actual
+    * @return una variable de tipo boolean que indica si el el nick es igual o no
+    */    
     public boolean equals(String nick1){
         boolean igual;
         if (this.nick.equals(nick1)){

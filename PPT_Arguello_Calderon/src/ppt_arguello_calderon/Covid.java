@@ -1,12 +1,22 @@
 
 package ppt_arguello_calderon;
 /**
- *
+ *Clase que hereda de partida, y que como variante determina dos derrotas 
+ * consecutivas para uno de los dos jugadores
  * @author ASUS
+ * @version 1.0
+ * @since 01/07/2020
  */
 public class Covid 
 extends Partida{
-    
+
+     /**
+     * Método para llamar al constructor y añadir una partida covid nueva
+     * @param J1 Jugador
+     * @param J2 Jugador
+     * @param id int con el identificador de la partida
+     * @return un objeto de tipo Covid
+     */    
     public static Covid nCovid (Jugador J1, Jugador J2,int id){
         Covid P = new Covid(J1,J2,id);
         Servidor.partidasIniciadas.add(P);
@@ -26,6 +36,11 @@ extends Partida{
             R1.run(10, id);
             do {
                 System.out.println("Sin jugadas");
+            /**
+            * Uno de los dos jugadores (se ha aleatorizado su orden antes) perderá
+            * dos rondas consecutivas. Luego se lleva el flujo de rondas de forma
+            * normal
+            */
             } while (this.confirmacionMensaje < 2);
             R1.interrupt();
             System.out.println(opcionJ1+opcionJ2);

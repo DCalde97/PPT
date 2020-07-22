@@ -10,8 +10,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ *Clase encargada de la gestión de tiempos durante la ejecución del programa
  * @author ASUS
+ * @version 1.0
+ * @since 01/07/2020
  */
 public class Reloj
     extends Thread
@@ -26,7 +28,11 @@ public class Reloj
         Partida P1 = Servidor.buscarPartida(identificador);
         P1.setConfirmacionMensaje(2);
     }
-    //Se recibe el tiempo en segundos, por eso se multiplica por 1000(ms)
+    /**
+     * Método que detiene la ejecución de un hilo por el tiempo establecido
+     * @param tiempo de tipo int que indica los segundos que se detiene la ejecución
+     * @exception si no puede detener la ejecución
+     */
     public static void temporizador(int tiempo){
         try {
             Thread.sleep(tiempo*1000);

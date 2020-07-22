@@ -15,8 +15,11 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 /**
- *
+ * Clase que extiende de JFrame, encargada de mostrar el mensaje de una proposición
+ * de reto a los jugadores. Con ello se puede aceptar o denegar un reto
  * @author Danip
+ * @version 1.0
+ * @since 01/07/2020
  */
 public class InterfazReto extends JFrame
     implements ActionListener {

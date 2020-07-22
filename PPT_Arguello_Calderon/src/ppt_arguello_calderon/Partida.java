@@ -1,8 +1,10 @@
 package ppt_arguello_calderon;
 
 /**
- *
+ * Clase encargada de gestionar el flujo y la lógica de una partida entre jugadores
  * @author ASUS
+ * @version 1.0
+ * @since 01/07/2020
  */
 public class Partida 
 extends Thread
@@ -18,6 +20,14 @@ extends Thread
     public int tiempoRonda;
     public int confirmacionMensaje;
 
+     /**
+     * Método para llamar al constructor de partirda y añadir una partida nueva
+     * a la lista
+     * @param J1 Jugador
+     * @param J2 Jugador
+     * @param id int con el identificador de la partida
+     * @return un objeto de tipo Partida
+     */
     public static Partida nPartida (Jugador J1, Jugador J2,int id){
         Partida P = new Partida(J1,J2,id);
         Servidor.partidasIniciadas.add(P);
@@ -25,6 +35,9 @@ extends Thread
         return P;
     }
     
+     /**
+     * El contructor de Partida inicia un hilo
+     */
     public Partida (Jugador J1, Jugador J2,int id) {
         this.id=id;
         this.J1 = J1;
@@ -98,6 +111,10 @@ extends Thread
 
     public void run()
     {
+        
+        /**
+        * Flujo de rondas de la partida
+        */
         do{
             Reloj R1 = new Reloj();
             R1.run(10, id);
@@ -125,7 +142,10 @@ extends Thread
         }while(rondas>0);
         
     }
-    
+     /**
+     * Método para determinar el ganador de una ronda
+     * @return un int que identifica quien ha ganado la ronda
+     */
     public int determinaGanador(){
         int ganador;
         if (opcionJ1.equals("NADA") || opcionJ2.equals("NADA")){ 
@@ -146,7 +166,11 @@ extends Thread
         }
         return ganador;
     }
-    
+     /**
+     * Método para asignar la puntuación a los jugadores
+     * @param ganador int que indica quien ganó la ronda
+     * @return una variable boolean que indica si se han asignado puntuaciones
+     */
     public boolean asignaPuntuacion(int ganador){
         boolean result=false;
         if (ganador==1){
@@ -169,6 +193,11 @@ extends Thread
         return result;
     }
     
+     /**
+     * Método que compara un identificador de partida
+     * @param id2 int con el identificador de la partida
+     * @return una variable booleana que india si es igual o no
+     */
     public boolean equals(int id2) {
         boolean t=false;
         if (Integer.toString(this.id).equals(Integer.toString(id2))){
