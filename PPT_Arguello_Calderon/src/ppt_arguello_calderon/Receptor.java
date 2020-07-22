@@ -16,14 +16,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Clase cuya responsabilidad es gestionar el canal de comunicación entre el servidor
+ * y los clientes 
  * @author Danip
+ * @version 1.0
+ * @since 01/07/2020
  */
 public class Receptor {
     
     private static ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
     public static ArrayList<InterfazPartida> partidasIniciadas = new ArrayList<>();
     static PantallaInicio P1=new PantallaInicio();
+    
     public static void añadirIPartida(InterfazPartida P){
         partidasIniciadas.add(P);
     }
@@ -32,6 +36,9 @@ public class Receptor {
         listaClientes.add(C);
     }
     
+    /**
+    * Método main se encarga de crar un nuevo hilo por cliente, e iniciarlo.
+    */ 
     public static void main (String args[]) throws Exception
     {
         Thread hiloLectura = new Thread(new Runnable()
@@ -70,26 +77,19 @@ public class Receptor {
         hiloLectura.start();
     }
    
-//    private Socket cliente;
-//    private InputStream flujoLectura;
-//    private OutputStream flujoEscritura;
 
-//    public Receptor() {
-//        try{
-//            cliente = new Socket("localhost",9998);
-//            this.flujoLectura = cliente.getInputStream();
-//            this.flujoEscritura = cliente.getOutputStream();
-//            Thread hiloLectura = new Thread((Runnable) this);
-//            hiloLectura.start();
-//        }
-//        catch(Exception ex) {
-//        }
-//    }
-    
-    /*Protocolos utilizados:
-    reto @ emisor @ receptor @ propuesto/aceptado/denegado/
-    partida @ identificadorPartida @ ronda @ puntuacion1 @ puntuacion2 @ emisor
-    partida @ identificadorPartida @ piedra/papel/tijera/rendirse*/
+    /**
+    * Método que evalua los mensajes de comunicación entre clientes y servidor
+    * y realiza unas u otras acciones dependiendo de éstos
+    * Los protocolos seguidos son: 
+    * reto @ emisor @ receptor @ propuesto/aceptado/denegado/
+    * partida @ identificadorPartida @ ronda @ puntuacion1 @ puntuacion2 @ emisor
+    * partida @ identificadorPartida @ piedra/papel/tijera/rendirse
+    * @param elmensaje String es el mensaje bajo alguno de los protocolos usados
+    * el cual será separado en partes y evaluado
+    * @throws Exception si no puede evaluar el primer parámetro entre PROPUESTO,
+    * ACEPTADO O DENEGADO
+    */
     private static void evaluaMensaje(String elmensaje) {
       System.out.println("El Mensaje:"  + elmensaje);
         String[] partes= elmensaje.split("@");
@@ -100,14 +100,18 @@ public class Receptor {
             String mensaje = partes[4];
             
             if (mensaje.equals("PROPUESTO")){
-                //preguntar por la interfad de cliente al usuario si acepta el reto o no una vez preguntado que nos lo devuelva
+                /**
+                 * Proponer un reto mediante la interfaz de usuario
+                 */
                 InterfazReto IR=new InterfazReto(emisor);
                 
             } else if (mensaje.equals("ACEPTADO")) {
                 String id = partes[5];
                 PantallaInicio.getC().aceptado(emisor);
                 
-                //iniciar interfad partida
+                /**
+                 * Iniciar la interfaz de una partida nueva
+                 */
                 InterfazPartida P=new InterfazPartida(Integer.parseInt(id));
                 partidasIniciadas.add(P);
             } else if (mensaje.equals("DENEGADO")) {
@@ -122,7 +126,9 @@ public class Receptor {
             String suPunt = partes[5];
             buscarIPartida(Integer.parseInt(idPartida)).mostrar( ronda, miPunt, suPunt);
         } else if (R_P.equals("NICKS")){
-            //Mostrar en el panel global
+            /**
+             * Mostrar los nicks por el panel global
+             */
             System.out.println("he entrado en NICKS");
             for (int i=2; i<partes.length; i++){
                 PantallaInicio.getC().mostrarPorPanel(partes[i]);
@@ -130,16 +136,20 @@ public class Receptor {
         } else if (R_P.equals("NICK")){
                 
                 PantallaInicio.getC().setNick(partes[2]);
-                //comprueba el servidor si el nick esta repetido y devuelve el nick modificado para que no se repitan
                 System.out.println("nick c pantalla inicio"+PantallaInicio.getC().getNick());
         } else {
-          //Aqui os falta poner un protocolo para la lista de usuarios.
             System.out.println("No se pudo decidir si RETO o PARTIDA : " + R_P);
             Cliente interfazCliente = Cliente.nCliente(P1.getCliente(), "Pepito");
         }
         
     }
     
+    /**
+    * Método que busca una partida en funcióin de un identificador
+    * @param id de tipo int es el identificador de la partida que se busca
+    * @return un objeto de tipo InterfazPartida que será nulo en caso de que no
+    * haya ninguna partida con ese identificador
+    */
     public static InterfazPartida buscarIPartida(int id) {
 
         InterfazPartida P=null;
@@ -152,6 +162,12 @@ public class Receptor {
         return P;
     }
     
+    /**
+    * Método que busca un cliente en función de un nick (identificador)
+    * @param nick de tipo String es el identificador del jugador que se busca
+    * @return un objeto de tipo Cliente que será nulo en caso de que no
+    * haya ninguno con ese nick
+    */
     public static Cliente buscarCliente(String nick) {
         
         Cliente C=null;
@@ -171,46 +187,35 @@ public class Receptor {
         }
         return C;
     }
-    
-    //recepcion de mensajes
-    
-//    public  String recMensaje(Socket sck)
-//    {
-//        String mensaje;
-//        //CAMBIAR
-//        try {
-//            byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres bacios
-//            //[P,e,p,i,t,o,,,,,,,,,,,,,,,,,,,,,,,,,,,,,]
-//            int nb = flujoLectura.read(buffer);
-//            ByteArrayOutputStream baos = new  ByteArrayOutputStream();
-//            baos.write(buffer, 0, nb);
-//            
-//            mensaje = new String(buffer,"UTF-8");
-//        } catch (IOException ex) {
-//            mensaje = null;
-//            System.out.println("No se pudo recivir el mensaje del servidor");
-//        }
-//        return mensaje;
-//    }
-    
-    
-    //mensajes al servidor
-    
+
+    /**
+    * Método que genera un mensaje para el servidor, que dependiendo de los parámetros
+    * aportado será de un tipo o de otro
+    * @param nick String con el nick del jugador que envia el reto
+    * @param receptor String con el nick del adversario
+    * @param opcion String que puede ser aceptado denegado o partida
+    */
     public static void mensaje (String nick, String receptor, String opcion) {//reto,aceptado,denegado,partida
         String mensaje=("@RETO@"+nick +"@"+ receptor +"@"+ opcion +"@");
         sendMessage(mensaje);
     }
-    
-//    public static void mensaje (String nick, String receptor, String opcion) {//reto,aceptado,denegado,partida
-//        String mensaje=("@RETO@"+nick +"@"+ receptor +"@"+ opcion+"@" +"@");
-//        sendMessage(mensaje);
-//    }
-    
+  
+    /**
+    * Método que genera un mensaje para el servidor, que dependiendo de los parámetros
+    * aportado será de un tipo o de otro
+    * @param idPartida Int que identifica la partida
+    * @param jugada String que determina la opcion elegda por el jugador
+    */
     public static void mensaje (int idPartida,String jugada) {
         String mensaje=("@PARTIDA@"+idPartida +"@"+ jugada + "@" + PantallaInicio.getC().getNick() +"@");
         sendMessage(mensaje);
     }
     
+    /**
+    * Método que envía un mensaje al servidor
+    * @param mensaje String del mensaje que se envía
+    * @exception si no se puede enviar datos por el flujo de escritura
+    */
     private static void sendMessage(String mensaje)
     {
         
