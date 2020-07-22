@@ -111,17 +111,17 @@ extends Thread
 
     public void run()
     {
-        
         /**
         * Flujo de rondas de la partida
         */
+        this.rondas++;
         do{
             Reloj R1 = new Reloj();
             R1.run(10, id);
             do {
                 System.out.println("Sin jugadas");
             } while (this.confirmacionMensaje < 2);
-            R1.interrupt();
+            R1.stop();
             int ganador= determinaGanador();
             asignaPuntuacion(ganador);
             opcionJ1="NADA";
@@ -133,6 +133,14 @@ extends Thread
             if (rondas!=1) {
                 mensaje1=Jugador.mensaje ( id, rondas,puntuacionJ1, puntuacionJ2);
                 mensaje2=Jugador.mensaje ( id, rondas,puntuacionJ2, puntuacionJ1);
+                int punt;
+                if(puntuacionJ1>puntuacionJ2) {
+                    punt=J1.getPartidasGanadas()+1;
+                    J1.setPartidasGanadas(punt);
+                } else if (puntuacionJ1<puntuacionJ2) {
+                    punt=J2.getPartidasGanadas()+1;
+                    J2.setPartidasGanadas(punt);
+                }
             } else {
                 mensaje1=Jugador.mensaje ( id, puntuacionJ1, puntuacionJ2);
                 mensaje2=Jugador.mensaje ( id, puntuacionJ2, puntuacionJ1);

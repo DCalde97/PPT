@@ -31,6 +31,7 @@ extends Partida{
     @Override
     public void run()
     {
+        this.rondas++;
         do{
             Reloj R1 = new Reloj();
             R1.run(10, id);
@@ -42,7 +43,7 @@ extends Partida{
             * normal
             */
             } while (this.confirmacionMensaje < 2);
-            R1.interrupt();
+            R1.stop();
             System.out.println(opcionJ1+opcionJ2);
             int ganador;
             if (getRondas()>3) {
@@ -57,7 +58,7 @@ extends Partida{
             confirmacionMensaje=0;
             String mensaje1;
             String mensaje2;
-            if (rondas!=1) {
+            if (rondas!=0) {
                 mensaje1=Jugador.mensaje ( id, rondas,puntuacionJ1, puntuacionJ2);
                 mensaje2=Jugador.mensaje ( id, rondas,puntuacionJ2, puntuacionJ1);
             } else {
@@ -66,6 +67,6 @@ extends Partida{
             }
             J1.sendMessage(mensaje1);
             J2.sendMessage(mensaje2);
-        }while(rondas>1);
+        }while(rondas>0);
     }
 }

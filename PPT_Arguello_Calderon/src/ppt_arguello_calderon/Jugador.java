@@ -27,13 +27,14 @@ import java.io.*;
 public class Jugador 
     extends Thread
 {
-  private File fichero;
-  private String nick;
-  Socket sckJugador;
-  InputStream in;
-  OutputStream ou;
-  private int partidasGanadas;
-  private int rondasGanadas;
+    private static String fichero="C:\\Ranking.txt";
+    private static String ficheroTem="C:\\RankingTemporal.txt";
+    private String nick;
+    Socket sckJugador;
+    InputStream in;
+    OutputStream ou;
+    private int partidasGanadas;
+    private int rondasGanadas;
   
   /**
    * Método que llama al constructor de Jugador
@@ -319,27 +320,28 @@ public class Jugador
         boolean hecho;
 	try {
             boolean ejecutado=false;
-            FileReader entrada = new FileReader("C:\\Ranking.txt");
-            FileWriter entradaTemporal = new FileWriter("C:\\RankingTemporal.txt");
+            FileReader entrada = new FileReader(fichero);
+            FileWriter entradaTemporal = new FileWriter(ficheroTem);
             BufferedReader buffer = new BufferedReader(entrada);				
             
-            String linea="";				 
-            while(linea!=null){
+            String linea=null;				 
+            do {
                 linea=buffer.readLine();
                 if(linea!=null){
-                    String[] partes = linea.split(";", 3);
-		    String nick = partes[0]; 
-		    String rondas = partes[1]; 
-		    String partidas = partes[2];
-		    if(this.nick.equals(nick)){
+                    String[] partes = linea.split(";");
+		    String nickFi = partes[0];
+		    if(this.nick.equals(nickFi)){
                         linea = (this.nick+";"+this.partidasGanadas+";"+this.rondasGanadas);
 		        entradaTemporal.write(linea+"\n");
 		        ejecutado = true;
 		    } else {
 		        entradaTemporal.write(linea+"\n");
 		    }
-		}
-            }		                
+		} else {
+                    linea = (this.nick+";"+this.partidasGanadas+";"+this.rondasGanadas);
+		    entradaTemporal.write(linea+"\n");
+                }
+            } while(linea!=null);	                
             entrada.close();
             buffer.close();
             entradaTemporal.close();
@@ -347,6 +349,7 @@ public class Jugador
         } catch (IOException e) {
             System.out.println("No se puede abrir el archivo,"
             + " ruta incorrecta o archivo inexistente");
+            System.out.println("Se ha de crear un fichero Ranking.txt en C:");
             hecho = false;
         }
         return hecho;
@@ -359,12 +362,12 @@ public class Jugador
     private boolean reemplazarFicheros(boolean ejecutado){
         boolean hecho;
         if(ejecutado==true){
-            File f1 = new File("C:\\Ranking.txt");
-            File f2 = new File("C:\\RankingTemporal.txt");
+            File f1 = new File(fichero);
+            File f2 = new File(ficheroTem);
             File f3 = new File("C:\\Temporal.txt");
             f1.renameTo(new File("C:\\Temporal.txt"));
-            f2.renameTo(new File("C:\\Ranking.txt"));
-            f3.renameTo(new File("C:\\RankingTemporal.txt"));
+            f2.renameTo(new File(fichero));
+            f3.renameTo(new File(ficheroTem));
             hecho = true;
         } else {
             hecho = false;   
