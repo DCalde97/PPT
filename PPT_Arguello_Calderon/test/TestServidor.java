@@ -10,8 +10,10 @@ import ppt_arguello_calderon.Partida;
 
 import ppt_arguello_calderon.Servidor;
 /**
- *
+ * Clase encargada de testear los metodos publicos del servidor
  * @author Danip
+ * @since 01/07/2020
+ * @version 1.0
  */
 public class TestServidor {
     @Test
