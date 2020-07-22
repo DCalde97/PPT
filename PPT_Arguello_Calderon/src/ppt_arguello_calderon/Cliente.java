@@ -113,18 +113,6 @@ public class Cliente
         this.txtChatGlobal.append(mensaje);
         this.txtChatGlobal.append("\n");
     }
-
-    
-//    private void initCommunication(Socket cliente) {
-//        try{
-//            this.flujoLectura = cliente.getDataInputStream();
-//            this.flujoEscritura = cliente.getOutputStream();
-//            //Thread hiloLectura = new Thread(this);
-//            //hiloLectura.start();
-//        }
-//        catch(Exception ex) {
-//        }
-//    }
     
     public void aceptado(String adversario) {
         JOptionPane.showMessageDialog(this, adversario+" ha aceptado el reto", "Titulo", JOptionPane.INFORMATION_MESSAGE, null);
@@ -132,6 +120,18 @@ public class Cliente
     
     public void denegado(String adversario) {
         JOptionPane.showMessageDialog(this, adversario+" ha denegado el reto", "Titulo", JOptionPane.INFORMATION_MESSAGE, null);
+    }
+    
+    public void ganador(String id,String miPunt,String suPunt) {
+        JOptionPane.showMessageDialog(this, "ENHORABUENA!!! Has ganado la partida "+id+" con un total de: "+miPunt+"-"+suPunt, "Titulo", JOptionPane.INFORMATION_MESSAGE, null);
+    }
+    
+    public void perdedor(String id,String miPunt,String suPunt) {
+        JOptionPane.showMessageDialog(this, "Lo siento has perdido la partida "+id+" con un total de: "+miPunt+"-"+suPunt, "Titulo", JOptionPane.INFORMATION_MESSAGE, null);
+    }
+    
+    public void empate(String id,String miPunt,String suPunt) {
+        JOptionPane.showMessageDialog(this, "Has empatado la partida "+id+" con un total de: "+miPunt+"-"+suPunt, "Titulo", JOptionPane.INFORMATION_MESSAGE, null);
     }
 
     @Override
@@ -142,14 +142,6 @@ public class Cliente
             
             in = new DataInputStream( cliente.getInputStream());
             String nicks = in.readUTF();
-            //mostrar por interfad
-            
-            //cuando se inicia el cliente se inicia el metod run que se encargara de
-            //la comunicacion para retar y recivir retos es decir siempre tiene que
-            //estar disponible para recivir mensajes
-            //si el reto mandado o el recivido son aceptados se crea una interfadpartida
-            //si es cancerlado muestra un mensaje por pantalla y sigue a la espera de
-            //nuevos mensajes y mandar nuevos retos
         } catch (IOException ex) {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -182,7 +174,6 @@ public class Cliente
             this.adversario.setText("");
             Receptor.mensaje(this.nick, adv,"PROPUESTO");
             
-            //InterfazPartida I1 = InterfazPartida;
         }
     }
     

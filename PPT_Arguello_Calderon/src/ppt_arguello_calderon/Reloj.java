@@ -18,7 +18,6 @@ public class Reloj
     implements Runnable {
 
     public Reloj() {
-        this.start();
     }
    
     public void run(int tiempo, int identificador)

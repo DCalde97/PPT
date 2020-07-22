@@ -76,10 +76,7 @@ public class Servidor {
         } catch (IOException ex) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
         }
-        int id=generarIdNick(nick);
-        if (id!=0) {
-            nick=nick.concat(Integer.toString(id));
-        }
+        nick=generarIdNick(nick);
         try {
             DataOutputStream out =new DataOutputStream( sck.getOutputStream());
             NICK=NICK.concat(nick);
@@ -159,18 +156,21 @@ public class Servidor {
         return P.getIdent()+1;
     }
     
-    public static int generarIdNick(String nick){
-        int codigo=0;
-            for(Jugador unJugador : jugadoresConectados){
-                System.out.println(unJugador.getNick());
-                if (unJugador.getNick().equals(nick)){
-                    codigo++;
-                    System.out.println(codigo+"coincide");
-                } else {
-                    System.out.println("falso");
+    public static String generarIdNick(String nick){
+        int codigo;
+        boolean coincide=false;
+        String n=nick;
+            do{
+                coincide=false;
+                for(Jugador unJugador : jugadoresConectados) {
+                    if (unJugador.getNick().equals(n)){
+                        codigo=(int)(Math.random()*100+1);
+                        n=nick+codigo;
+                        coincide=true;
+                    }
                 }
-            }
-        return codigo;
+            }while(coincide==true);
+        return n;
     }
        
 }

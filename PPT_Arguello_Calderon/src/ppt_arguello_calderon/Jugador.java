@@ -122,25 +122,6 @@ public class Jugador
         return igual;
     }
     
-//    public void run() {
-//    while (true)
-//    {
-//      try{
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        byte[] buffer = new byte[1024];
-//        int nb = 0;
-//        do{
-//          nb = this.in.read(buffer);
-//          baos.write(buffer, 0, nb);
-//        }while (nb>0 && this.in.available()>0);
-//            //Retransmitir a todos los demas usuarios/clientes
-//            evaluaMensaje(new String(baos.toByteArray()));
-//        }catch (Exception ex){
-//
-//        } 
-//      } 
-//    }
-    
     public void run() {
         while (true){
 
@@ -182,10 +163,8 @@ public class Jugador
             System.out.println(elmensaje);
             if (mensaje.equals("ACEPTADO")){
                 //crear partida
-                System.out.println("Aceptado");
                 int id=generaId();
-                System.out.println(id);
-                Partida.nPartida (Servidor.buscarJugador(emisor),Servidor.buscarJugador(receptor),id);
+                creaPartida(Servidor.buscarJugador(emisor),Servidor.buscarJugador(receptor),id);
                 elmensaje=mensaje(emisor,receptor,mensaje,id);
                 Servidor.Retransmitir(elmensaje);
                 elmensaje=mensaje(receptor,emisor,mensaje,id);
@@ -203,6 +182,7 @@ public class Jugador
             String jugada = partes[3];
             String nick=partes[4];
             Partida P1 = Servidor.buscarPartida(Integer.parseInt(idPartida));
+            System.out.println(P1.getId());
             int conf=P1.confirmacionMensaje;
             P1.confirmacionMensaje=conf+1;
             Jugador J1 = Servidor.buscarJugador(nick);
@@ -211,6 +191,7 @@ public class Jugador
             } else {
                 P1.opcionJ2=jugada; 
             }
+            System.out.println("jugada asignada");
            
         } else {
             System.out.println("No se pudo decidir si RETO o PARTIDA");
@@ -233,6 +214,11 @@ public class Jugador
         return m;
     }
     
+    public static String mensaje (int id,int miPunt,int suPunt) {//reto,aceptado,denegado,partida
+        String m=("@GANADOR@"+ id +"@"+ miPunt +"@"+suPunt+"@");
+        return m;
+    }
+    
     
 
     private static void creaPartida(Jugador J1, Jugador J2,int id){
@@ -240,19 +226,20 @@ public class Jugador
         if (rand!=6) {
             Partida P1= Partida.nPartida(J1,J2,id);
             Servidor.partidasIniciadas.add(P1);
-            //return P1;
+            
         }else{
             rand = (int) (Math.random()*2+1);
             Covid C1;
             if (rand==1) {
-                C1=new Covid(J1,J2,id);
-                //return C1;
+                C1=Covid.nCovid(J1,J2,id);
+                
             }else{
-                C1=new Covid(J2,J1,id);
-                //return C1;
+                C1=Covid.nCovid(J2,J1,id);
+                
             }
             Servidor.partidasIniciadas.add(C1);
         }
+        
     }
     
     private static int generaId(){
@@ -260,7 +247,8 @@ public class Jugador
         if (Servidor.partidasIniciadas.isEmpty()){
             id=0;
         } else {
-            id=(Servidor.partidasIniciadas.get(Servidor.partidasIniciadas.size()).getIdent())+1;
+            id=(Servidor.partidasIniciadas.get(Servidor.partidasIniciadas.size()-1).getIdent());
+            id++;
         }
         return id;
     }

@@ -10,50 +10,47 @@ extends Partida{
     public static Covid nCovid (Jugador J1, Jugador J2,int id){
         Covid P = new Covid(J1,J2,id);
         Servidor.partidasIniciadas.add(P);
+        P.start();
         return P;
     }
     
     public Covid (Jugador J1, Jugador J2,int id){    
         super(J1,J2,id);
-        this.start();     
     }
     
+    @Override
     public void run()
     {
-  
-        Reloj R1 = new Reloj();
-        
-        do {            
-           
-        } while (this.confirmacionMensaje < 2);
-        int ganador;
-        if (getRondas()>3) {
-            ganador=1;
-        }else{
-            ganador= determinaGanador();
-        }
-        setRondas(getRondas()-1);
-        asignaPuntuacion(ganador);
-        confirmacionMensaje=0;
-        String mensaje;
-        mensaje=Jugador.mensaje ( id, rondas,puntuacionJ1,puntuacionJ2);
-        J1.sendMessage(mensaje);
-        mensaje=Jugador.mensaje ( id, rondas,puntuacionJ2,puntuacionJ1);
-        J2.sendMessage(mensaje);
-    }
-
-    //crear exception personalizada
-    private Juego transformar(String opcion){
-        Juego op=null;
-        if (opcion.equals("Piedra")){
-            op=Juego.Piedra;
-        } else if(opcion.equals("Papel")){
-            op=Juego.Papel;
-        } else if(opcion.equals("Tijera")){
-            op=Juego.Tijera;
-        } else {
-            op=null;
-        }
-        return op;
+        do{
+            Reloj R1 = new Reloj();
+            R1.run(10, id);
+            do {
+                System.out.println("Sin jugadas");
+            } while (this.confirmacionMensaje < 2);
+            R1.interrupt();
+            System.out.println(opcionJ1+opcionJ2);
+            int ganador;
+            if (getRondas()>3) {
+                ganador=1;
+            }else{
+                ganador= determinaGanador();
+            }
+            asignaPuntuacion(ganador);
+            opcionJ1="NADA";
+            opcionJ2="NADA";
+            this.rondas--;
+            confirmacionMensaje=0;
+            String mensaje1;
+            String mensaje2;
+            if (rondas!=1) {
+                mensaje1=Jugador.mensaje ( id, rondas,puntuacionJ1, puntuacionJ2);
+                mensaje2=Jugador.mensaje ( id, rondas,puntuacionJ2, puntuacionJ1);
+            } else {
+                mensaje1=Jugador.mensaje ( id, puntuacionJ1, puntuacionJ2);
+                mensaje2=Jugador.mensaje ( id, puntuacionJ2, puntuacionJ1);
+            }
+            J1.sendMessage(mensaje1);
+            J2.sendMessage(mensaje2);
+        }while(rondas>1);
     }
 }

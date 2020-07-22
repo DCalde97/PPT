@@ -123,7 +123,6 @@ public class Receptor {
             buscarIPartida(Integer.parseInt(idPartida)).mostrar( ronda, miPunt, suPunt);
         } else if (R_P.equals("NICKS")){
             //Mostrar en el panel global
-            System.out.println("he entrado en NICKS");
             for (int i=2; i<partes.length; i++){
                 PantallaInicio.getC().mostrarPorPanel(partes[i]);
             }
@@ -131,7 +130,18 @@ public class Receptor {
                 
                 PantallaInicio.getC().setNick(partes[2]);
                 //comprueba el servidor si el nick esta repetido y devuelve el nick modificado para que no se repitan
-                System.out.println("nick c pantalla inicio"+PantallaInicio.getC().getNick());
+        } else if (R_P.equals("GANADOR")){
+            String idPartida = partes[2];
+            String miPunt = partes[3];
+            String suPunt = partes[4];
+            if(Integer.parseInt(miPunt)>Integer.parseInt(suPunt)){
+                PantallaInicio.getC().ganador(idPartida, miPunt, suPunt);
+            } else if(Integer.parseInt(miPunt)<Integer.parseInt(suPunt)) {
+                PantallaInicio.getC().perdedor(idPartida, miPunt, suPunt);
+            } else {
+                PantallaInicio.getC().empate(idPartida, miPunt, suPunt);
+            }
+        
         } else {
           //Aqui os falta poner un protocolo para la lista de usuarios.
             System.out.println("No se pudo decidir si RETO o PARTIDA : " + R_P);
