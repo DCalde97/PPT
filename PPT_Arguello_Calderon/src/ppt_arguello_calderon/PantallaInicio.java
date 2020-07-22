@@ -62,11 +62,7 @@ public class PantallaInicio
     public static Cliente getC() {
         return C;
     }
-
-    
-    
-    
-    
+  
     private void initComponents() {
         panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         this.setTitle("Piedra papel tijera");

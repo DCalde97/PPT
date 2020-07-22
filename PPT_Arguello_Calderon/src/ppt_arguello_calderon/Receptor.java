@@ -78,10 +78,10 @@ public class Receptor {
     /**
     * Método que evalua los mensajes de comunicación entre clientes y servidor
     * y realiza unas u otras acciones dependiendo de éstos
-    * Los protocolos seguidos son: 
-    * reto @ emisor @ receptor @ propuesto/aceptado/denegado/
-    * partida @ identificadorPartida @ ronda @ puntuacion1 @ puntuacion2 @ emisor
-    * partida @ identificadorPartida @ piedra/papel/tijera/rendirse
+    * Los protocolos seguidos son: (separados por arrobas, en vez de |)
+    * reto | emisor | receptor | propuesto/aceptado/denegado/
+    * partida | identificadorPartida | ronda | puntuacion1 | puntuacion2 | emisor
+    * partida | identificadorPartida | piedra/papel/tijera/rendirse
     * @param elmensaje String es el mensaje bajo alguno de los protocolos usados
     * el cual será separado en partes y evaluado
     * @throws Exception si no puede evaluar el primer parámetro entre PROPUESTO,

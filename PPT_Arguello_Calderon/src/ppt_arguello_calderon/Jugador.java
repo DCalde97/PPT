@@ -376,6 +376,11 @@ public class Jugador
     }
     
 
+     /**
+     * Método que convierte en una cadena los datos del jugador
+     * @param J Jugador
+     * @return variable String con la informacion concatenada
+     */
     public String toString(Jugador J){
         String cadena=(J.getNick()+";"+J.getPartidasGanadas()+";"+J.getRondasGanadas());
         return cadena;

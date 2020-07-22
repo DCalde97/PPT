@@ -31,7 +31,6 @@ public class Reloj
     /**
      * Método que detiene la ejecución de un hilo por el tiempo establecido
      * @param tiempo de tipo int que indica los segundos que se detiene la ejecución
-     * @exception si no puede detener la ejecución
      */
     public static void temporizador(int tiempo){
         try {

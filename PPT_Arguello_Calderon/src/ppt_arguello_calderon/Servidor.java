@@ -123,7 +123,6 @@ public class Servidor {
     /**
     * Método que busca un jugador en la lista de jugadores conectados.
     * @param nick Identificador del jugador que se busca
-    * @throws Exception si no encuentra el jugador
     * @return un objeto de tipo Jugador que tiene por nick el recibido por param.
     */ 
     public static Jugador buscarJugador(String nick) {
