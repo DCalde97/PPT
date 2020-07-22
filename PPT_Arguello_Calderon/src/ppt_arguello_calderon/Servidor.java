@@ -164,7 +164,7 @@ public class Servidor {
     * Método que genera un identificador de partida de forma incremental
     * @return una variable de tipo int, el identificador de la partida
     */ 
-    public int generarIdPartida(){
+    public static int generarIdPartida(){
         Partida P=null;
             for(Partida unaPartida : partidasIniciadas){
                     P=unaPartida;
