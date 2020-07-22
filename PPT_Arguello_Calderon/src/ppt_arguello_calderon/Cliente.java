@@ -24,8 +24,11 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 /**
- *
+ * Clase cuya responsabilidad es mostrar una interfaz para el cliente en la que
+ * el jugador pueda ver el panel de mensajes y tenga la opción de retar a jugadores
  * @author ASUS
+ * @version 1.0
+ * @since 01/07/2020
  */
 public class Cliente
     extends JFrame
@@ -50,6 +53,12 @@ public class Cliente
         return cliente;
     }
     
+    /**
+    * Método constructor de un nuevo cliente
+    * @param cliente Socket del cliente
+    * @param nick String con el nick del cliente
+    * @return un objeto de tipo Cliente
+    */ 
     public static Cliente nCliente(Socket cliente,String nick) {
         Cliente C=null;
         if(cant==0){
@@ -109,23 +118,19 @@ public class Cliente
 
     }
     
+    /**
+    * Método que actualiza el contenido de los paneles de texto
+    * @param mensaje String del mensaje a mostrar en el panel de texto
+    */ 
     public void mostrarPorPanel(String mensaje){
         this.txtChatGlobal.append(mensaje);
         this.txtChatGlobal.append("\n");
     }
 
-    
-//    private void initCommunication(Socket cliente) {
-//        try{
-//            this.flujoLectura = cliente.getDataInputStream();
-//            this.flujoEscritura = cliente.getOutputStream();
-//            //Thread hiloLectura = new Thread(this);
-//            //hiloLectura.start();
-//        }
-//        catch(Exception ex) {
-//        }
-//    }
-    
+    /**
+    * Método que muestra un mensaje al jugador en un panel.
+    * @param adversario String del jugador al que se enviará el mensaje en el panel
+    */ 
     public void aceptado(String adversario) {
         JOptionPane.showMessageDialog(this, adversario+" ha aceptado el reto", "Titulo", JOptionPane.INFORMATION_MESSAGE, null);
     }
@@ -134,6 +139,9 @@ public class Cliente
         JOptionPane.showMessageDialog(this, adversario+" ha denegado el reto", "Titulo", JOptionPane.INFORMATION_MESSAGE, null);
     }
 
+    /**
+    * Método run que genera un hilo por cliente
+    */
     @Override
     public void run()
     {
@@ -142,14 +150,7 @@ public class Cliente
             
             in = new DataInputStream( cliente.getInputStream());
             String nicks = in.readUTF();
-            //mostrar por interfad
             
-            //cuando se inicia el cliente se inicia el metod run que se encargara de
-            //la comunicacion para retar y recivir retos es decir siempre tiene que
-            //estar disponible para recivir mensajes
-            //si el reto mandado o el recivido son aceptados se crea una interfadpartida
-            //si es cancerlado muestra un mensaje por pantalla y sigue a la espera de
-            //nuevos mensajes y mandar nuevos retos
         } catch (IOException ex) {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -173,6 +174,10 @@ public class Cliente
       //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+    * Método keyreleased envia una proposición de reto al adversario cuando se suelta
+    * la tecla enter
+    */ 
     @Override
     public void keyReleased(KeyEvent e)
     {
@@ -186,6 +191,11 @@ public class Cliente
         }
     }
     
+    /**
+    * Método que compara un nick dado con el actual.
+    * @param nick1 String el nick a comparar con el actual
+    * @return una variable de tipo boolean que indica si el el nick es igual o no
+    */ 
     public boolean equals(String nick1){
         boolean igual;
         if (this.nick.equals(nick1)){
