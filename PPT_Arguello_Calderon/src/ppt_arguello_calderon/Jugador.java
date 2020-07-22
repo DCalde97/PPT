@@ -18,10 +18,11 @@ import java.util.logging.Level;
 import java.io.*;
 
 /**
- *
+ * Clase que extiende de Thread, encargada de la gestión de jugadores y su información
  * @author ASUS
+ * @version 1.0
+ * @since 01/07/2020
  */
-
 public class Jugador 
     extends Thread
 {
@@ -33,7 +34,12 @@ public class Jugador
   private int partidasGanadas;
   private int rondasGanadas;
   
-
+  /**
+   * Método que llama al constructor de Jugador
+   * @param sck Socket del cliente
+   * @param nick String con el nick del jugador
+   * @return un ohjeto de tipo Jugador
+   */
   public static Jugador newJugador(Socket sck,String nick)
   {
       Jugador J1 = new Jugador(sck,nick);
@@ -55,17 +61,15 @@ public class Jugador
         }
     }
   
-    public  String leerNick(Socket sck)
+    /**
+     * Método que lee el nick de un jugador
+     * @param sck Socket del cliente
+     * @return un String con el nick del jugador
+     */
+    public String leerNick(Socket sck)
     {
         String nick;
         try {
-//            byte[] buffer = new byte[1024]; //preguntar a garrido sobre los caracteres bacios
-//            //[P,e,p,i,t,o,,,,,,,,,,,,,,,,,,,,,,,,,,,,,]
-//            int nb = in.read(buffer);
-//            ByteArrayOutputStream baos = new  ByteArrayOutputStream();
-//            baos.write(buffer, 0, nb);
-//            String[] partes= new String(baos.toByteArray()).split("@");
-//            nick = partes[0];
             DataInputStream in = new DataInputStream( sck.getInputStream());
             nick=in.readUTF();
             
@@ -102,6 +106,10 @@ public class Jugador
         //actualizarFichero();
     } 
 
+    /**
+     * Metodo para enviar un mensaje por el socket
+     * @param mensaje String con el mensaje a enviar
+     */
     public void sendMessage(String mensaje)
     {
         try{
@@ -112,6 +120,11 @@ public class Jugador
         }
     }
 
+    /**
+     * Método que comprueba si un nick es igual al actual
+     * @param nick1 String con el nick a comparar
+     * @return una variable boolean que será true si los nicks son iguales
+     */
     public boolean equals(String nick1){
         boolean igual;
         if (this.nick.equals(nick1)){
@@ -121,25 +134,6 @@ public class Jugador
         }
         return igual;
     }
-    
-//    public void run() {
-//    while (true)
-//    {
-//      try{
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        byte[] buffer = new byte[1024];
-//        int nb = 0;
-//        do{
-//          nb = this.in.read(buffer);
-//          baos.write(buffer, 0, nb);
-//        }while (nb>0 && this.in.available()>0);
-//            //Retransmitir a todos los demas usuarios/clientes
-//            evaluaMensaje(new String(baos.toByteArray()));
-//        }catch (Exception ex){
-//
-//        } 
-//      } 
-//    }
     
     public void run() {
         while (true){
@@ -170,6 +164,10 @@ public class Jugador
         }
     }
     
+    /**
+     * Método que evalua los mensajes 
+     * @param elmensaje 
+     */
     private static void evaluaMensaje(String elmensaje) {
         
         String[] partes= elmensaje.split("@");
@@ -218,23 +216,53 @@ public class Jugador
         
     }
     
-    public static String mensaje (String nick, String receptor, String opcion) {//reto,aceptado,denegado
+    /**
+    * Método que genera un mensaje para el servidor, que dependiendo de los parámetros
+    * aportados será de un tipo o de otro
+    * @param nick String con el nick del jugador que envia el reto
+    * @param receptor String con el nick del adversario
+    * @param opcion String que puede ser aceptado denegado o partida
+    * @return String con el mensaje
+    */
+    public static String mensaje (String nick, String receptor, String opcion) {
         String m=("@RETO@"+nick +"@"+ receptor +"@"+ opcion +"@");
         return m;
     }
-    
+    /**
+    * Método que genera un mensaje para el servidor, que dependiendo de los parámetros
+    * aportados será de un tipo o de otro
+    * @param nick String con el nick del jugador que envia el reto
+    * @param receptor String con el nick del adversario
+    * @param opcion String que puede ser aceptado denegado o partida
+    * @param id int con el identificador de la partida
+    * @return String con el mensaje
+    */
     public static String mensaje (String nick, String receptor, String opcion,int id) {//reto,aceptado,denegado,partida
         String m=("@RETO@"+nick +"@"+ receptor +"@"+ opcion +"@"+id+"@");
         return m;
     }
-    
+    /**
+    * Método que genera un mensaje para el servidor, que dependiendo de los parámetros
+    * aportados será de un tipo o de otro
+    * @param id int que identifica la partida
+    * @param ronda int que muestra cuantas rondas quedan
+    * @param miPunt int que indica mi puntuacion
+    * @param suPunt int que indica la puntuacion del adversario
+    * @return String con el mensaje
+    */
     public static String mensaje (int id,int ronda,int miPunt,int suPunt) {//reto,aceptado,denegado,partida
         String m=("@PARTIDA@"+id +"@"+ ronda +"@"+ miPunt +"@"+suPunt+"@");
         return m;
     }
     
     
-
+    /**
+     * Método que determina si una partida tiene covid o no con una posibilidad
+     * entre 6 de que ésto ocurra
+     * @param J1 Jugador
+     * @param J2 Jugador
+     * @param id int que identifica la partida
+     */
     private static void creaPartida(Jugador J1, Jugador J2,int id){
         int rand = (int) (Math.random()*6+1);
         if (rand!=6) {
@@ -255,6 +283,10 @@ public class Jugador
         }
     }
     
+    /**
+     * Método que genera el ID de una partida de forma incremental
+     * @return variable int que identifica la partida
+     */
     private static int generaId(){
         int id;
         if (Servidor.partidasIniciadas.isEmpty()){
@@ -265,7 +297,10 @@ public class Jugador
         return id;
     }
     
-    //Función que actualiza los datos del fichero de jugadores/puntuaciones
+    /**
+     * Método que actualiza los datos del fichero de jugadores/puntuaciones
+     * @return variable boolean que indica si se ha actualizado el fichero
+     */
     public boolean actualizarFichero() {
         boolean hecho;
 	try {
@@ -302,7 +337,12 @@ public class Jugador
         }
         return hecho;
     }
-        
+    
+    /**
+     * Método que escribe los cambios del fichero nuevo
+     * @param ejecutado Boolean que determina si se escribe el fichero o no
+     * @return variable boolean que indica si se ha escrito correctamente
+     */
     private boolean reemplazarFicheros(boolean ejecutado){
         boolean hecho;
         if(ejecutado==true){

@@ -21,8 +21,11 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
- *
+ * Clase que extiende de JFrame, encargada de mostrar el mensaje de obtención
+ * del nick para cuando un jugador quiere conectarse
  * @author Danip
+ * @version 1.0
+ * @since 01/07/2020
  */
 public class PantallaInicio 
     extends JFrame
@@ -58,11 +61,7 @@ public class PantallaInicio
 
     public static Cliente getC() {
         return C;
-    }
-
-    
-    
-    
+    }  
     
     private void initComponents() {
         panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -80,8 +79,7 @@ public class PantallaInicio
         this.setVisible(true);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
-    
-    
+        
     private void initCommunication(String nick) {
         try{
             cliente = new Socket("localhost",9998);
@@ -112,6 +110,10 @@ public class PantallaInicio
     }
 
     @Override
+  /**
+   * Método que envia el nick introducido en el campo de texto al pulsar enter
+   * y además inicia la segunda interfaz de retos
+   */
   public void keyReleased(KeyEvent e)
   {
     if (e.getKeyCode() == 10)
@@ -124,21 +126,11 @@ public class PantallaInicio
             this.nick.setText("");
             C=Cliente.nCliente(cliente,nombre);//abrir la interfaz de los retos
             initCommunication(nombre);
-            //in = new DataInputStream( cliente.getInputStream());
-            //nombre = in.readUTF();
             this.setVisible(false);//cerrar la interfaz
         } 
         catch (Exception ee){
           System.out.println(ee.toString());
         }
-        
-        /*finally {
-            try {
-                in.close();
-            } catch (IOException ex) {
-                Logger.getLogger(PantallaInicio.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }*/
     }
   }
 }
