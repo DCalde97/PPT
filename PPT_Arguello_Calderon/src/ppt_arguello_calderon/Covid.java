@@ -34,7 +34,8 @@ extends Partida{
         Reloj R1 = new Reloj();
         /**
          * Uno de los dos jugadores (se ha aleatorizado su orden antes) perderá
-         * dos rondas consecutivas
+         * dos rondas consecutivas. Luego se lleva el flujo de rondas de forma
+         * normal
          */
         do {            
            

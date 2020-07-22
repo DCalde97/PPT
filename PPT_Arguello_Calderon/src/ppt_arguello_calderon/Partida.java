@@ -1,8 +1,10 @@
 package ppt_arguello_calderon;
 
 /**
- *
+ * Clase encargada de gestionar el flujo y la lógica de una partida entre jugadores
  * @author ASUS
+ * @version 1.0
+ * @since 01/07/2020
  */
 public class Partida 
 extends Thread
@@ -18,12 +20,24 @@ extends Thread
     public int tiempoRonda;
     public int confirmacionMensaje;
 
+    
+     /**
+     * Método para llamar al constructor de partirda y añadir una partida nueva
+     * a la lista
+     * @param J1 Jugador
+     * @param J2 Jugador
+     * @param id int con el identificador de la partida
+     * @return un objeto de tipo Partida
+     */
     public static Partida nPartida (Jugador J1, Jugador J2,int id){
         Partida P = new Partida(J1,J2,id);
         Servidor.partidasIniciadas.add(P);
         return P;
     }
     
+    /**
+     * El contructor de Partida inicia un hilo
+     */
     public Partida (Jugador J1, Jugador J2,int id) {
         this.id=id;
         this.J1 = J1;
@@ -99,17 +113,11 @@ extends Thread
 
     public void run()
     {
-        /*int numEjecuciones = 0;
-        while (true)
-        {   
-            while(this.rondas>0 && this.puntuacionJ1<3 && this.puntuacionJ2<3) {
-                ronda(this.J1,this.J2);
-                this.rondas--;
-            }
-        }*/
+        
         do{
-            //Reloj R1 = new Reloj();
-
+            /**
+             * Flujo de rondas de la partida
+             */
             do {
                 System.out.println("No Entro");
             } while (this.confirmacionMensaje < 2);
@@ -131,21 +139,10 @@ extends Thread
         
     }
     
-    /*public void ronda(Jugador J1, Jugador J2) {
-        int ganador;
-        String opcionJ1;
-        String opcionJ2;
-        //mandar mensajes a J1
-        
-        J1.sendMessage("IncioRonda");//partida idPartida ronda puntJ1 puntJ2 
-        J2.sendMessage("IncioRonda");//partida idPartida ronda puntJ2 puntJ1
-        opcionJ1 = J1.reciveMensage();
-        opcionJ2 = J2.reciveMensage();
-        ganador=determinaGanador(opcionJ1, opcionJ2);
-        asignaPuntuacion(ganador);
-}*/ 
-    
-    
+     /**
+     * Método para determinar el ganador de una ronda
+     * @return un int que identifica quien ha ganado la ronda
+     */
     public int determinaGanador(){
         int ganador;
         if (opcionJ1.isEmpty() || opcionJ2.isEmpty()){ 
@@ -164,13 +161,16 @@ extends Thread
         } else if (opcionJ1.equals(opcionJ2)){
             ganador=3; //empate
         }else {
-            //Juego op1 = transformar(OP1);
-            //Juego op2 = transformar(OP2);
             ganador=Juego.ganador(opcionJ1,opcionJ2);
         }
         return ganador;
     }
     
+     /**
+     * Método para asignar la puntuación a los jugadores
+     * @param ganador int que indica quien ganó la ronda
+     * @return una variable boolean que indica si se han asignado puntuaciones
+     */
     public boolean asignaPuntuacion(int ganador){
         boolean result=false;
         if (ganador==1){
@@ -196,7 +196,11 @@ extends Thread
         return result;
     }
 
-    //crear exception personalizada
+     /**
+     * Método que interpreta las opciones elegidas de los jugadores
+     * @param opcion String con la opcion elegida
+     * @return un objeto de tipo Juego con la opción elegida
+     */
     private Juego transformar(String opcion){
         Juego op=null;
         if (opcion.equals("Piedra")){
@@ -211,6 +215,11 @@ extends Thread
         return op;
     }
     
+     /**
+     * Método que compara un identificador de partida
+     * @param id2 int con el identificador de la partida
+     * @return una variable booleana que india si es igual o no
+     */
     public boolean equals(int id2) {
         boolean t=false;
         if (Integer.toString(this.id).equals(Integer.toString(id2))){
